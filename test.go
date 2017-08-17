@@ -308,7 +308,7 @@ func RunTests(opts Options) {
 // Test is the main test entry point when running tests through the command line
 // tool.
 func Test(driver, dsn string, testSuites []string, rw bool, t *testing.T) {
-	clients, err := connectClients(driver, dsn, t)
+	clients, err := ConnectClients(driver, dsn, t)
 	if err != nil {
 		t.Fatalf("Failed to connect to %s (%s driver): %s\n", dsn, driver, err)
 	}
@@ -334,11 +334,12 @@ func Test(driver, dsn string, testSuites []string, rw bool, t *testing.T) {
 	}
 	t.Logf("Running the following test suites: %s\n", strings.Join(testSuites, ", "))
 	for _, suite := range testSuites {
-		runTests(clients, suite, t)
+		RunTestsInternal(clients, suite, t)
 	}
 }
 
-func runTests(ctx *kt.Context, suite string, t *testing.T) {
+// RunTestsInternal is for internal use only.
+func RunTestsInternal(ctx *kt.Context, suite string, t *testing.T) {
 	ctx.T = t
 	conf, ok := suites[suite]
 	if !ok {
@@ -381,7 +382,8 @@ func detectCompatibility(client *kivik.Client) ([]string, error) {
 	return []string{}, errors.New("Unable to automatically determine the proper test suite")
 }
 
-func connectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
+// ConnectClients connects clients.
+func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	var noAuthDSN string
 	if parsed, err := url.Parse(dsn); err == nil {
 		if parsed.User == nil {
@@ -417,16 +419,17 @@ func connectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	return clients, nil
 }
 
-func doTest(suite, envName string, t *testing.T) {
+// DoTest runs a suite of tests.
+func DoTest(suite, envName string, t *testing.T) {
 	dsn := os.Getenv(envName)
 	if dsn == "" {
 		t.Skipf("%s: %s DSN not set; skipping tests", envName, suite)
 	}
-	clients, err := connectClients(driverMap[suite], dsn, t)
+	clients, err := ConnectClients(driverMap[suite], dsn, t)
 	if err != nil {
 		t.Errorf("Failed to connect to %s: %s\n", suite, err)
 		return
 	}
 	clients.RW = true
-	runTests(clients, suite, t)
+	RunTestsInternal(clients, suite, t)
 }
