@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/test/kt"
+	"github.com/go-kivik/kiviktest/kt"
 )
 
 func init() {

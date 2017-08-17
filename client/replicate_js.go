@@ -4,8 +4,8 @@ package client
 
 import (
 	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/driver/pouchdb/bindings"
-	"github.com/flimzy/kivik/test/kt"
+	"github.com/go-kivik/kiviktest/kt"
+	"github.com/go-kivik/pouchdb/bindings"
 )
 
 func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, repID string, in map[string]interface{}) map[string]interface{} {

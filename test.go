@@ -1,4 +1,4 @@
-package test
+package kiviktest
 
 import (
 	"context"
@@ -15,11 +15,11 @@ import (
 	"github.com/flimzy/kivik"
 	"github.com/flimzy/kivik/driver/couchdb/chttp"
 	"github.com/flimzy/kivik/errors"
-	"github.com/flimzy/kivik/test/kt"
+	"github.com/go-kivik/kiviktest/kt"
 
 	// Tests
-	_ "github.com/flimzy/kivik/test/client"
-	_ "github.com/flimzy/kivik/test/db"
+	_ "github.com/go-kivik/kiviktest/client"
+	_ "github.com/go-kivik/kiviktest/db"
 )
 
 // The available test suites

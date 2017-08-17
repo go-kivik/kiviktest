@@ -13,7 +13,7 @@ import (
 
 	"github.com/flimzy/kivik"
 	"github.com/flimzy/kivik/driver/couchdb/chttp"
-	"github.com/flimzy/kivik/test/kt"
+	"github.com/go-kivik/kiviktest/kt"
 )
 
 func init() {

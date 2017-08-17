@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"github.com/flimzy/diff"
+
 	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/test/kt"
+	"github.com/go-kivik/kiviktest/kt"
 )
 
 func init() {

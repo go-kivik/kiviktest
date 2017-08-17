@@ -1,12 +1,12 @@
 package client
 
 import (
+	"context"
 	"sync"
 
 	"github.com/flimzy/diff"
 	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/test/kt"
-	"golang.org/x/net/context"
+	"github.com/go-kivik/kiviktest/kt"
 )
 
 func init() {

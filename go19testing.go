@@ -1,6 +1,6 @@
 // +build go1.9
 
-package test
+package kiviktest
 
 import (
 	"io"
