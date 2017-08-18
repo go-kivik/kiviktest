@@ -1,0 +1,11 @@
+package: github.com/go-kivik/kiviktest
+import:
+- package: github.com/flimzy/diff
+  version: ^0.1.2
+- package: github.com/flimzy/kivik
+  version: ^1.0.5
+  subpackages:
+  - driver/couchdb/chttp
+  - errors
+- package: github.com/pkg/errors
+  version: ^0.8.0
