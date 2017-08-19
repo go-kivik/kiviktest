@@ -5,6 +5,7 @@ package client
 import (
 	"github.com/flimzy/kivik"
 	"github.com/go-kivik/kiviktest/kt"
+	"github.com/gopherjs/gopherjs/js"
 )
 
 func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, repID string, in map[string]interface{}) map[string]interface{} {
@@ -15,5 +16,7 @@ func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, r
 		in["_id"] = repID
 		return in
 	}
+	in["source"] = js.Global.Get("PouchDB").New(source)
+	in["target"] = js.Global.Get("PouchDB").New(target)
 	return in
 }
