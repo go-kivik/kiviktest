@@ -5,7 +5,6 @@ package client
 import (
 	"github.com/flimzy/kivik"
 	"github.com/go-kivik/kiviktest/kt"
-	"github.com/go-kivik/pouchdb/bindings"
 )
 
 func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, repID string, in map[string]interface{}) map[string]interface{} {
@@ -16,7 +15,5 @@ func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, r
 		in["_id"] = repID
 		return in
 	}
-	in["source"] = bindings.GlobalPouchDB().New(source, ctx.Options("db"))
-	in["target"] = bindings.GlobalPouchDB().New(target, ctx.Options("db"))
 	return in
 }
