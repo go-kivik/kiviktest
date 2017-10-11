@@ -68,31 +68,34 @@ func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffs
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	expected := &kivik.QueryPlan{
-		DBName: dbName,
-		Index: map[string]interface{}{
-			"ddoc": nil,
-			"name": "_all_docs",
-			"type": "special",
-			"def":  map[string]interface{}{"fields": []interface{}{map[string]string{"_id": "asc"}}},
-		},
-		Selector: map[string]interface{}{"_id": map[string]interface{}{"$gt": nil}},
-		Options: map[string]interface{}{
-			"bookmark":  "nil",
-			"conflicts": false,
-			"fields":    "all_fields",
-			"limit":     25,
-			"r":         []int{49},
-			"skip":      0,
-			"sort":      map[string]interface{}{},
-			"use_index": []interface{}{},
-		},
-		Limit: 25,
-		Range: map[string]interface{}{
-			"start_key": nil,
-			"end_key":   "\xef\xbf\xbd",
-		},
+	expected, _ := ctx.Interface("plan").(*kivik.QueryPlan)
+	if expected == nil {
+		expected = &kivik.QueryPlan{
+			Index: map[string]interface{}{
+				"ddoc": nil,
+				"name": "_all_docs",
+				"type": "special",
+				"def":  map[string]interface{}{"fields": []interface{}{map[string]string{"_id": "asc"}}},
+			},
+			Selector: map[string]interface{}{"_id": map[string]interface{}{"$gt": nil}},
+			Options: map[string]interface{}{
+				"bookmark":  "nil",
+				"conflicts": false,
+				"fields":    "all_fields",
+				"limit":     25,
+				"r":         []int{49},
+				"skip":      0,
+				"sort":      map[string]interface{}{},
+				"use_index": []interface{}{},
+			},
+			Limit: 25,
+			Range: map[string]interface{}{
+				"start_key": nil,
+				"end_key":   "\xef\xbf\xbd",
+			},
+		}
 	}
+	expected.DBName = dbName
 	if d := diff.AsJSON(expected, plan); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
