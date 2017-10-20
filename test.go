@@ -42,6 +42,7 @@ var AllSuites = []string{
 	SuitePouchRemote,
 	SuiteCouch16,
 	SuiteCouch20,
+	SuiteCouch21,
 	SuiteKivikMemory,
 	SuiteKivikFS,
 	SuiteCloudant,
@@ -53,6 +54,7 @@ var driverMap = map[string]string{
 	SuitePouchRemote: "pouch",
 	SuiteCouch16:     "couch",
 	SuiteCouch20:     "couch",
+	SuiteCouch21:     "couch",
 	SuiteCloudant:    "couch",
 	SuiteKivikServer: "couch",
 	SuiteKivikMemory: "memory",
@@ -375,6 +377,9 @@ func detectCompatibility(client *kivik.Client) ([]string, error) {
 	case "The Apache Software Foundation":
 		if strings.HasPrefix(info.Version, "2.0") {
 			return []string{SuiteCouch20}, nil
+		}
+		if strings.HasPrefix(info.Version, "2.1") {
+			return []string{SuiteCouch21}, nil
 		}
 		return []string{SuiteCouch16}, nil
 	case "Kivik Memory Adaptor":
