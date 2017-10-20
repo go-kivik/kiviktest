@@ -29,6 +29,7 @@ const (
 	SuitePouchRemote = "pouchRemote"
 	SuiteCouch16     = "couch16"
 	SuiteCouch20     = "couch20"
+	SuiteCouch21     = "couch21"
 	SuiteCloudant    = "cloudant"
 	SuiteKivikServer = "kivikServer"
 	SuiteKivikMemory = "kivikMemory"
