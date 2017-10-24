@@ -11,7 +11,7 @@ import (
 
 // DSN returns a testing DSN from the environment.
 func DSN(t *testing.T) string {
-	for _, env := range []string{"KIVIK_TEST_DSN_COUCH16", "KIVIK_TEST_DSN_COUCH20", "KIVIK_TEST_DSN_CLOUDANT"} {
+	for _, env := range []string{"KIVIK_TEST_DSN_COUCH21", "KIVIK_TEST_DSN_COUCH20", "KIVIK_TEST_DSN_COUCH16", "KIVIK_TEST_DSN_CLOUDANT"} {
 		dsn := os.Getenv(env)
 		if dsn != "" {
 			return dsn
