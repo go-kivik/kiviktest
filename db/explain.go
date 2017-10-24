@@ -68,8 +68,10 @@ func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffs
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	expected, _ := ctx.Interface("plan").(*kivik.QueryPlan)
-	if expected == nil {
+	var expected *kivik.QueryPlan
+	if e, ok := ctx.Interface("plan").(*kivik.QueryPlan); ok {
+		*expected = *e // Make a shallow copy
+	} else {
 		expected = &kivik.QueryPlan{
 			Index: map[string]interface{}{
 				"ddoc": nil,
