@@ -68,7 +68,7 @@ func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffs
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	var expected *kivik.QueryPlan
+	expected := new(kivik.QueryPlan)
 	if e, ok := ctx.Interface("plan").(*kivik.QueryPlan); ok {
 		*expected = *e // Make a shallow copy
 	} else {
