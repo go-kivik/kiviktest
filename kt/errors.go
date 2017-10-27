@@ -3,7 +3,7 @@ package kt
 import (
 	"net/http"
 
-	"github.com/flimzy/kivik/errors"
+	"github.com/flimzy/kivik"
 )
 
 // CheckError compares the error's status code with that expected.
@@ -12,7 +12,7 @@ func (c *Context) CheckError(err error) (match bool, success bool) {
 	if status == 0 && err == nil {
 		return true, true
 	}
-	switch errors.StatusCode(err) {
+	switch kivik.StatusCode(err) {
 	case status:
 		// This is expected
 		return true, status == 0
@@ -21,10 +21,10 @@ func (c *Context) CheckError(err error) (match bool, success bool) {
 		return false, true
 	default:
 		if status == 0 {
-			c.Errorf("Unexpected failure: %d/%s", errors.StatusCode(err), err)
+			c.Errorf("Unexpected failure: %d/%s", kivik.StatusCode(err), err)
 			return false, false
 		}
-		c.Errorf("Unexpected failure state.\nExpected: %d/%s\n  Actual: %d/%s", status, http.StatusText(status), errors.StatusCode(err), err)
+		c.Errorf("Unexpected failure state.\nExpected: %d/%s\n  Actual: %d/%s", status, http.StatusText(status), kivik.StatusCode(err), err)
 		return false, false
 	}
 }
