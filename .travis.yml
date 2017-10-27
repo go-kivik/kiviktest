@@ -1,0 +1,10 @@
+dist: trusty
+language: go
+go:
+    - 1.9.x
+
+install:
+    - go get -u gopkg.in/alecthomas/gometalinter.v1 && gometalinter.v1 --install
+
+script:
+    - gometalinter.v1 --config .linter.json
