@@ -158,23 +158,22 @@ func cleanupDatabases(ctx context.Context, client *kivik.Client, verbose bool) (
 			if verbose {
 				fmt.Printf("\t--- Deleting %s\n", dbName)
 			}
-			err := client.DestroyDB(ctx, dbName)
-			if err != nil && errors.StatusCode(err) != http.StatusNotFound {
-				return count, err
+			if e := client.DestroyDB(ctx, dbName); e != nil && kivik.StatusCode(e) != http.StatusNotFound {
+				return count, e
 			}
 			count++
 		}
 	}
 	replicator, err := client.DB(context.Background(), "_replicator")
 	if err != nil {
-		if errors.StatusCode(err) != kivik.StatusNotFound && errors.StatusCode(err) != kivik.StatusNotImplemented {
+		if kivik.StatusCode(err) != kivik.StatusNotFound && kivik.StatusCode(err) != kivik.StatusNotImplemented {
 			return count, err
 		}
 		return count, nil
 	}
 	docs, err := replicator.AllDocs(context.Background(), map[string]interface{}{"include_docs": true})
 	if err != nil {
-		if errors.StatusCode(err) == kivik.StatusNotImplemented || errors.StatusCode(err) == kivik.StatusNotFound {
+		if kivik.StatusCode(err) == kivik.StatusNotImplemented || kivik.StatusCode(err) == kivik.StatusNotFound {
 			return count, nil
 		}
 		return count, err
@@ -202,7 +201,7 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	}
 	db, err := client.DB(ctx, "_users")
 	if err != nil {
-		switch errors.StatusCode(err) {
+		switch kivik.StatusCode(err) {
 		case kivik.StatusNotFound, kivik.StatusNotImplemented:
 			return 0, nil
 		}
@@ -210,7 +209,7 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	}
 	users, err := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
 	if err != nil {
-		switch errors.StatusCode(err) {
+		switch kivik.StatusCode(err) {
 		case kivik.StatusNotFound, kivik.StatusNotImplemented:
 			return 0, nil
 		}
@@ -243,7 +242,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 	}
 	db, err := client.DB(ctx, "_replicator")
 	if err != nil {
-		switch errors.StatusCode(err) {
+		switch kivik.StatusCode(err) {
 		case kivik.StatusNotFound, kivik.StatusNotImplemented:
 			return 0, nil
 		}
@@ -251,7 +250,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 	}
 	reps, err := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
 	if err != nil {
-		switch errors.StatusCode(err) {
+		switch kivik.StatusCode(err) {
 		case kivik.StatusNotFound, kivik.StatusNotImplemented:
 			return 0, nil
 		}
@@ -292,9 +291,9 @@ func RunTests(opts Options) {
 		}
 		os.Exit(0)
 	}
-	flag.Set("test.run", opts.Match)
+	_ = flag.Set("test.run", opts.Match)
 	if opts.Verbose {
-		flag.Set("test.v", "true")
+		_ = flag.Set("test.v", "true")
 	}
 	tests := []testing.InternalTest{
 		{
