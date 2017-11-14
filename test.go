@@ -291,9 +291,9 @@ func RunTests(opts Options) {
 		}
 		os.Exit(0)
 	}
-	flag.Set("test.run", opts.Match)
+	_ = flag.Set("test.run", opts.Match)
 	if opts.Verbose {
-		flag.Set("test.v", "true")
+		_ = flag.Set("test.v", "true")
 	}
 	tests := []testing.InternalTest{
 		{
