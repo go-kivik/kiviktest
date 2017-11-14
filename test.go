@@ -28,6 +28,7 @@ const (
 	SuitePouchLocal  = "pouch"
 	SuitePouchRemote = "pouchRemote"
 	SuiteCouch16     = "couch16"
+	SuiteCouch17     = "couch17"
 	SuiteCouch20     = "couch20"
 	SuiteCouch21     = "couch21"
 	SuiteCloudant    = "cloudant"
