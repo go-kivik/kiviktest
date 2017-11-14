@@ -3,7 +3,15 @@ language: go
 go:
     - 1.9.x
 
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:masterminds/glide'
+    packages:
+      - glide
+
 install:
+    - glide install
     - go get -u gopkg.in/alecthomas/gometalinter.v1 && gometalinter.v1 --install
 
 script:
