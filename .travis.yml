@@ -16,3 +16,4 @@ install:
 
 script:
     - gometalinter.v1 --config .linter.json
+    - go test ./...
