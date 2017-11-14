@@ -54,6 +54,7 @@ var driverMap = map[string]string{
 	SuitePouchLocal:  "pouch",
 	SuitePouchRemote: "pouch",
 	SuiteCouch16:     "couch",
+	SuiteCouch17:     "couch",
 	SuiteCouch20:     "couch",
 	SuiteCouch21:     "couch",
 	SuiteCloudant:    "couch",
