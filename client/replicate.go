@@ -146,6 +146,12 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 		if updateErr = rep.Update(cx); updateErr != nil {
 			break
 		}
+		if rep.State() == "crashing" {
+			// 2.1 treats Not Found as a temporary error (on the theory the missing
+			// db could be created), so this short-circuits.
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
 	}
 	if updateErr != nil {
 		ctx.Fatalf("Replication update failed: %s", updateErr)
@@ -165,14 +171,15 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 				ctx.Errorf("Did not expect replication ID")
 			}
 		default:
-			if rep.ReplicationID() == "" {
+			if rep.State() != "completed" && rep.State() != "failed" && // 2.1.x
+				rep.ReplicationID() == "" {
 				ctx.Errorf("Expected a replication ID")
 			}
 		}
-		if rep.Source != dbsource {
+		if rep.Source != dbsource && rep.Source != dbsource+"/" {
 			ctx.Errorf("Unexpected source. Expected: %s, Actual: %s\n", dbsource, rep.Source)
 		}
-		if rep.Target != dbtarget {
+		if rep.Target != dbtarget && rep.Target != dbtarget+"/" {
 			ctx.Errorf("Unexpected target. Expected: %s, Actual: %s\n", dbtarget, rep.Target)
 		}
 		if rep.State() != kivik.ReplicationComplete {
