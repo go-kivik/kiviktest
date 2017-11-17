@@ -40,8 +40,8 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 	}
 	dbtarget := prefix + ctx.TestDB()
 	dbsource := prefix + ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbtarget, ctx.Options("db"))
-	defer ctx.Admin.DestroyDB(context.Background(), dbsource, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbtarget, ctx.Options("db")) // nolint: errcheck
+	defer ctx.Admin.DestroyDB(context.Background(), dbsource, ctx.Options("db")) // nolint: errcheck
 
 	db, err := ctx.Admin.DB(context.Background(), dbsource)
 	if err != nil {
@@ -91,7 +91,7 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			defer rep.Delete(context.Background())
+			defer rep.Delete(context.Background()) // nolint: errcheck
 			timeout := time.Duration(ctx.MustInt("timeoutSeconds")) * time.Second
 			cx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel()
@@ -131,7 +131,7 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	defer rep.Delete(context.Background())
+	defer rep.Delete(context.Background()) // nolint: errcheck
 	timeout := time.Duration(ctx.MustInt("timeoutSeconds")) * time.Second
 	cx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -146,6 +146,12 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 		if updateErr = rep.Update(cx); updateErr != nil {
 			break
 		}
+		if rep.State() == "crashing" {
+			// 2.1 treats Not Found as a temporary error (on the theory the missing
+			// db could be created), so this short-circuits.
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
 	}
 	if updateErr != nil {
 		ctx.Fatalf("Replication update failed: %s", updateErr)
@@ -165,14 +171,15 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 				ctx.Errorf("Did not expect replication ID")
 			}
 		default:
-			if rep.ReplicationID() == "" {
+			if rep.State() != "completed" && rep.State() != "failed" && // 2.1.x
+				rep.ReplicationID() == "" {
 				ctx.Errorf("Expected a replication ID")
 			}
 		}
-		if rep.Source != dbsource {
+		if rep.Source != dbsource && rep.Source != dbsource+"/" {
 			ctx.Errorf("Unexpected source. Expected: %s, Actual: %s\n", dbsource, rep.Source)
 		}
-		if rep.Target != dbtarget {
+		if rep.Target != dbtarget && rep.Target != dbtarget+"/" {
 			ctx.Errorf("Unexpected target. Expected: %s, Actual: %s\n", dbtarget, rep.Target)
 		}
 		if rep.State() != kivik.ReplicationComplete {

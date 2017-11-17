@@ -15,7 +15,7 @@ func init() {
 func rev(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
-		defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db"))
+		defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
 		db, err := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
 		if err != nil {
 			ctx.Fatalf("Failed to connect to test db: %s", err)

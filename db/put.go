@@ -25,7 +25,7 @@ func put(ctx *kt.Context) {
 func testPut(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbName := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
 	db, e := client.DB(context.Background(), dbName, ctx.Options("db"))
 	if !ctx.IsExpectedSuccess(e) {
 		return
