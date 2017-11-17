@@ -40,8 +40,8 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 	}
 	dbtarget := prefix + ctx.TestDB()
 	dbsource := prefix + ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbtarget, ctx.Options("db"))
-	defer ctx.Admin.DestroyDB(context.Background(), dbsource, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbtarget, ctx.Options("db")) // nolint: errcheck
+	defer ctx.Admin.DestroyDB(context.Background(), dbsource, ctx.Options("db")) // nolint: errcheck
 
 	db, err := ctx.Admin.DB(context.Background(), dbsource)
 	if err != nil {
@@ -91,7 +91,7 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			defer rep.Delete(context.Background())
+			defer rep.Delete(context.Background()) // nolint: errcheck
 			timeout := time.Duration(ctx.MustInt("timeoutSeconds")) * time.Second
 			cx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel()
@@ -131,7 +131,7 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	defer rep.Delete(context.Background())
+	defer rep.Delete(context.Background()) // nolint: errcheck
 	timeout := time.Duration(ctx.MustInt("timeoutSeconds")) * time.Second
 	cx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()

@@ -27,7 +27,7 @@ func bulkDocs(ctx *kt.Context) {
 func testBulkDocs(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
 	adb, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
 	if err != nil {
 		ctx.Fatalf("Failed to connect to db as admin: %s", err)

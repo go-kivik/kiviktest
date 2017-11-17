@@ -30,7 +30,7 @@ const maxWait = 5 * time.Second
 func testChanges(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
 	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
 	if err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
@@ -75,11 +75,11 @@ func testChanges(ctx *kt.Context, client *kivik.Client) {
 				revs = append(revs, ch)
 				if ch == expected[len(expected)-1] {
 					// We got the last one
-					changes.Close()
+					_ = changes.Close()
 				}
 			}
 			if len(revs) >= len(expected) {
-				changes.Close()
+				_ = changes.Close()
 			}
 		}
 		if err = changes.Err(); err != nil {
@@ -94,7 +94,7 @@ func testChanges(ctx *kt.Context, client *kivik.Client) {
 			ctx.Errorf("Error reading changes: %s", chErr)
 		}
 	case <-timer.C:
-		changes.Close()
+		_ = changes.Close()
 		ctx.Errorf("Failed to read changes in %s", maxWait)
 	}
 	if err = changes.Err(); err != nil {

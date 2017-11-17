@@ -54,8 +54,8 @@ func getReplications(ctx *kt.Context) {
 func testRWGetReplications(ctx *kt.Context, client *kivik.Client) {
 	dbname1 := ctx.TestDB()
 	dbname2 := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbname1, ctx.Options("db"))
-	defer ctx.Admin.DestroyDB(context.Background(), dbname2, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbname1, ctx.Options("db")) // nolint: errcheck
+	defer ctx.Admin.DestroyDB(context.Background(), dbname2, ctx.Options("db")) // nolint: errcheck
 	ctx.Run("group", func(ctx *kt.Context) {
 		ctx.Run("ValidReplication", func(ctx *kt.Context) {
 			// TODO

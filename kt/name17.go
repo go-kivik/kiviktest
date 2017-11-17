@@ -17,7 +17,7 @@ func tName(t *testing.T) string {
 	pv := reflect.ValueOf(t)
 	v := reflect.Indirect(pv)
 	name := v.FieldByName("name")
-	namePtr := unsafe.Pointer(name.UnsafeAddr())
+	namePtr := unsafe.Pointer(name.UnsafeAddr()) // nolint: gas
 	realName := (*string)(namePtr)
 	return *realName
 }

@@ -14,7 +14,7 @@ func init() {
 func createDoc(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
-		defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db"))
+		defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
 		ctx.Run("group", func(ctx *kt.Context) {
 			ctx.RunAdmin(func(ctx *kt.Context) {
 				ctx.Parallel()

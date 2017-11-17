@@ -48,7 +48,7 @@ func roGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 
 func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 	dbname := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db"))
+	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
 	dba, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
 	if err != nil {
 		ctx.Fatalf("Failed to open db as admin: %s", err)

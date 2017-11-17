@@ -14,7 +14,7 @@ func init() {
 func copy(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
-		defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db"))
+		defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
 		db, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
 		if err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
