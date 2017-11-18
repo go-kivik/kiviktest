@@ -62,19 +62,8 @@ func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 			{"foo": "asc"},
 		},
 	}
-	meta, err := ctx.Admin.Version(context.Background())
-	if err != nil {
-		ctx.Fatalf("Failed to detect db version: %s", err)
-	}
-	if meta.Vendor == "The Apache Software Foundation" {
-		ver, err := semver.New(meta.Version)
-		if err != nil {
-			ctx.Fatalf("Invalid version '%s' reported by serer: %s", meta.Version, err)
-		}
-		filteredIndexVersion := semver.MustParse("2.1.1")
-		if ver.GE(filteredIndexVersion) {
-			indexDef["partial_filter_selector"] = map[string]interface{}{}
-		}
+	if partialFilterSupported(ctx) {
+		indexDef["partial_filter_selector"] = map[string]interface{}{}
 	}
 	testGetIndexes(ctx, client, dbname, []kivik.Index{
 		kt.AllDocsIndex,
@@ -85,6 +74,28 @@ func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 			Definition: indexDef,
 		},
 	})
+}
+
+func partialFilterSupported(ctx *kt.Context) bool {
+	meta, err := ctx.Admin.Version(context.Background())
+	if err != nil {
+		ctx.Fatalf("Failed to detect db version: %s", err)
+	}
+	if meta.Vendor == "PouchDB" {
+		return true
+	}
+	if meta.Vendor != "The Apache Software Foundation" {
+		return false
+	}
+	ver, err := semver.New(meta.Version)
+	if err != nil {
+		ctx.Fatalf("Invalid version '%s' reported by serer: %s", meta.Version, err)
+	}
+	filteredIndexVersion := semver.MustParse("2.1.1")
+	if ver.GE(filteredIndexVersion) {
+		return true
+	}
+	return false
 }
 
 func testGetIndexes(ctx *kt.Context, client *kivik.Client, dbname string, expected interface{}) {
