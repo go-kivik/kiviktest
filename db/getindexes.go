@@ -66,13 +66,15 @@ func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 	if err != nil {
 		ctx.Fatalf("Failed to detect db version: %s", err)
 	}
-	ver, err := semver.New(meta.Version)
-	if err != nil {
-		ctx.Fatalf("Invalid version '%s' reported by serer: %s", meta.Version, err)
-	}
-	filteredIndexVersion := semver.MustParse("2.1.1")
-	if ver.GE(filteredIndexVersion) {
-		indexDef["partial_filter_selector"] = map[string]interface{}{}
+	if meta.Vendor == "The Apache Software Foundation" {
+		ver, err := semver.New(meta.Version)
+		if err != nil {
+			ctx.Fatalf("Invalid version '%s' reported by serer: %s", meta.Version, err)
+		}
+		filteredIndexVersion := semver.MustParse("2.1.1")
+		if ver.GE(filteredIndexVersion) {
+			indexDef["partial_filter_selector"] = map[string]interface{}{}
+		}
 	}
 	testGetIndexes(ctx, client, dbname, []kivik.Index{
 		kt.AllDocsIndex,
