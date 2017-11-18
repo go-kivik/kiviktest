@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 
+	"github.com/blang/semver"
 	"github.com/flimzy/diff"
 
 	"github.com/flimzy/kivik"
@@ -56,17 +57,30 @@ func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 	if err = dba.CreateIndex(context.Background(), "foo", "bar", `{"fields":["foo"]}`); err != nil {
 		ctx.Fatalf("Failed to create index: %s", err)
 	}
+	indexDef := map[string]interface{}{
+		"fields": []map[string]string{
+			{"foo": "asc"},
+		},
+	}
+	meta, err := ctx.Admin.Version(context.Background())
+	if err != nil {
+		ctx.Fatalf("Failed to detect db version: %s", err)
+	}
+	ver, err := semver.New(meta.Version)
+	if err != nil {
+		ctx.Fatalf("Invalid version '%s' reported by serer: %s", meta.Version, err)
+	}
+	filteredIndexVersion := semver.MustParse("2.1.1")
+	if ver.GE(filteredIndexVersion) {
+		indexDef["partial_filter_selector"] = map[string]interface{}{}
+	}
 	testGetIndexes(ctx, client, dbname, []kivik.Index{
 		kt.AllDocsIndex,
 		{
-			DesignDoc: "_design/foo",
-			Name:      "bar",
-			Type:      "json",
-			Definition: map[string]interface{}{
-				"fields": []map[string]string{
-					{"foo": "asc"},
-				},
-			},
+			DesignDoc:  "_design/foo",
+			Name:       "bar",
+			Type:       "json",
+			Definition: indexDef,
 		},
 	})
 }

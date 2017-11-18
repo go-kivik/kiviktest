@@ -42,11 +42,9 @@ func getReplications(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		ctx.RunAdmin(func(ctx *kt.Context) {
 			ctx.Parallel()
-
 		})
 		ctx.RunNoAuth(func(ctx *kt.Context) {
 			ctx.Parallel()
-
 		})
 	})
 }
