@@ -4,6 +4,8 @@ package kt
 import (
 	"context"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"math/rand"
 	"strings"
 	"sync"
@@ -283,4 +285,10 @@ func Retry(fn func() error) error {
 		break
 	}
 	return err
+}
+
+// Body turns a string into a read closer, useful as a request or attachment
+// body.
+func Body(str string, args ...interface{}) io.ReadCloser {
+	return ioutil.NopCloser(strings.NewReader(fmt.Sprintf(str, args...)))
 }
