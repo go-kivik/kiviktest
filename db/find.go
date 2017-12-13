@@ -117,6 +117,9 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 	if d := diff.TextSlices(expected, docIDs); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
+	if rows.Offset() != expOffset {
+		ctx.Errorf("Unexpected offset: %v", rows.Offset())
+	}
 	ctx.Run("Warning", func(ctx *kt.Context) {
 		rows, err := db.Find(context.Background(), `{"selector":{"foo":{"$gt":null}}}`)
 		if !ctx.IsExpectedSuccess(err) {
