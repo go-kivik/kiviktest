@@ -7,7 +7,7 @@ import (
 	"github.com/go-kivik/kiviktest/kt"
 )
 
-func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, repID string, in map[string]interface{}) map[string]interface{} {
+func replicationOptions(_ *kt.Context, _ *kivik.Client, _, _, _ string, in map[string]interface{}) map[string]interface{} {
 	if in == nil {
 		in = make(map[string]interface{})
 	}
