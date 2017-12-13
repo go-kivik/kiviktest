@@ -33,10 +33,10 @@ func testExplainRW(ctx *kt.Context) {
 	defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
 	ctx.Run("group", func(ctx *kt.Context) {
 		ctx.RunAdmin(func(ctx *kt.Context) {
-			doExplainTest(ctx, ctx.Admin, dbName, 0)
+			doExplainTest(ctx, ctx.Admin, dbName)
 		})
 		ctx.RunNoAuth(func(ctx *kt.Context) {
-			doExplainTest(ctx, ctx.NoAuth, dbName, 0)
+			doExplainTest(ctx, ctx.NoAuth, dbName)
 		})
 	})
 }
@@ -49,13 +49,13 @@ func testExplain(ctx *kt.Context, client *kivik.Client) {
 	for _, dbName := range ctx.StringSlice("databases") {
 		func(dbName string) {
 			ctx.Run(dbName, func(ctx *kt.Context) {
-				doExplainTest(ctx, client, dbName, int64(ctx.Int("offset")))
+				doExplainTest(ctx, client, dbName)
 			})
 		}(dbName)
 	}
 }
 
-func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset int64) {
+func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string) {
 	ctx.Parallel()
 	db, err := client.DB(context.Background(), dbName, ctx.Options("db"))
 	// Errors may be deferred here, so only return if we actually get
