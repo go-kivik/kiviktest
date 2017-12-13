@@ -40,7 +40,7 @@ func roGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 		func(dbname string) {
 			ctx.Run(dbname, func(ctx *kt.Context) {
 				ctx.Parallel()
-				testGetIndexes(ctx, ctx.Admin, dbname, ctx.Interface("indexes"))
+				testGetIndexes(ctx, client, dbname, ctx.Interface("indexes"))
 			})
 		}(dbname)
 	}
