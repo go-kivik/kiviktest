@@ -3,9 +3,10 @@
 package client
 
 import (
-	"github.com/flimzy/kivik"
-	"github.com/go-kivik/kiviktest/kt"
 	"github.com/gopherjs/gopherjs/js"
+
+	"github.com/go-kivik/kivik"
+	"github.com/go-kivik/kiviktest/kt"
 )
 
 func replicationOptions(ctx *kt.Context, client *kivik.Client, target, source, repID string, in map[string]interface{}) map[string]interface{} {

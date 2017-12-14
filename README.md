@@ -1,7 +1,7 @@
 # kiviktest
 
 This package provides integration tests for the
-[Kivik](https://github.com/flimzy/kivik) suite of packages.
+[Kivik](https://github.com/go-kivik/kivik) suite of packages.
 
 # License
 

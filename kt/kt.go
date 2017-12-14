@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/flimzy/kivik"
 	"github.com/go-kivik/couchdb/chttp"
+	"github.com/go-kivik/kivik"
 )
 
 // Context is a collection of client connections with different security access.

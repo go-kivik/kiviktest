@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
 )
 

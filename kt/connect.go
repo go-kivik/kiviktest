@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kivik"
 )
 
 // DSN returns a testing DSN from the environment.

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kivik"
 )
 
 // AllDocsIndex is the default index for _all_docs
