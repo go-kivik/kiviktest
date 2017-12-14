@@ -12,9 +12,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/flimzy/kivik"
-	"github.com/flimzy/kivik/errors"
 	"github.com/go-kivik/couchdb/chttp"
+	"github.com/go-kivik/kivik"
+	"github.com/go-kivik/kivik/errors"
 	"github.com/go-kivik/kiviktest/kt"
 
 	// Tests

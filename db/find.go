@@ -7,7 +7,7 @@ import (
 	"github.com/flimzy/diff"
 	"github.com/pkg/errors"
 
-	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
 )
 

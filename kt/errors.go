@@ -3,7 +3,7 @@ package kt
 import (
 	"net/http"
 
-	"github.com/flimzy/kivik"
+	"github.com/go-kivik/kivik"
 )
 
 // CheckError compares the error's status code with that expected.
