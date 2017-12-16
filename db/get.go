@@ -91,8 +91,8 @@ func testGet(ctx *kt.Context, db *kivik.DB, expectedDoc *testDoc) {
 	ctx.Run(expectedDoc.ID, func(ctx *kt.Context) {
 		ctx.Parallel()
 		doc := &testDoc{}
-		if err := db.Get(context.Background(), expectedDoc.ID).ScanDoc(&doc); err != nil {
-			ctx.Fatalf("Failed to scan doc: %s", err)
+		if !ctx.IsExpectedSuccess(db.Get(context.Background(), expectedDoc.ID).ScanDoc(&doc)) {
+			return
 		}
 		if d := diff.AsJSON(expectedDoc, doc); d != nil {
 			ctx.Errorf("Fetched document not as expected:\n%s\n", d)
