@@ -189,20 +189,16 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) {
 				return
 			}
 			for updates.Next() {
-				if err := updates.UpdateErr(); err != nil {
-					ctx.Errorf("Bulk create failed: %s", err)
+				if e := updates.UpdateErr(); e != nil {
+					ctx.Errorf("Bulk create failed: %s", e)
 				}
 			}
-			if err := updates.Err(); err != nil {
-				ctx.Errorf("Iteration error: %s", err)
+			if e := updates.Err(); e != nil {
+				ctx.Errorf("Iteration error: %s", e)
 			}
 			ctx.Run("Retrieve", func(ctx *kt.Context) {
-				row, err := db.Get(context.Background(), id2)
-				if err != nil {
-					ctx.Fatalf("failed to retrieve bulk-inserted document: %s", err)
-				}
 				var result map[string]interface{}
-				if err = row.ScanDoc(&result); err != nil {
+				if err = db.Get(context.Background(), id2).ScanDoc(&result); err != nil {
 					ctx.Fatalf("failed to scan bulk-inserted document: %s", err)
 				}
 				expected := map[string]interface{}{
