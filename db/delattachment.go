@@ -86,7 +86,8 @@ func doDeleteAttachmentTest(ctx *kt.Context, client *kivik.Client, dbname, docID
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	if _, err = db.Get(context.Background(), docID, map[string]interface{}{"rev": rev}); err != nil {
+	var i interface{}
+	if err = db.Get(context.Background(), docID, map[string]interface{}{"rev": rev}).ScanDoc(&i); err != nil {
 		ctx.Fatalf("Failed to get deleted doc: %s", err)
 	}
 }

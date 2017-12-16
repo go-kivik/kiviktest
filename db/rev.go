@@ -9,10 +9,10 @@ import (
 )
 
 func init() {
-	kt.Register("Rev", rev)
+	kt.Register("GetMeta", getMeta)
 }
 
-func rev(ctx *kt.Context) {
+func getMeta(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
 		defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
@@ -54,10 +54,10 @@ func rev(ctx *kt.Context) {
 				if !ctx.IsExpectedSuccess(err) {
 					return
 				}
-				testRev(ctx, db, doc)
-				testRev(ctx, db, ddoc)
-				testRev(ctx, db, local)
-				testRev(ctx, db, &testDoc{ID: "bogus"})
+				testGetMeta(ctx, db, doc)
+				testGetMeta(ctx, db, ddoc)
+				testGetMeta(ctx, db, local)
+				testGetMeta(ctx, db, &testDoc{ID: "bogus"})
 			})
 			ctx.RunNoAuth(func(ctx *kt.Context) {
 				ctx.Parallel()
@@ -65,28 +65,24 @@ func rev(ctx *kt.Context) {
 				if !ctx.IsExpectedSuccess(err) {
 					return
 				}
-				testRev(ctx, db, doc)
-				testRev(ctx, db, ddoc)
-				testRev(ctx, db, local)
-				testRev(ctx, db, &testDoc{ID: "bogus"})
+				testGetMeta(ctx, db, doc)
+				testGetMeta(ctx, db, ddoc)
+				testGetMeta(ctx, db, local)
+				testGetMeta(ctx, db, &testDoc{ID: "bogus"})
 			})
 		})
 	})
 }
 
-func testRev(ctx *kt.Context, db *kivik.DB, expectedDoc *testDoc) {
+func testGetMeta(ctx *kt.Context, db *kivik.DB, expectedDoc *testDoc) {
 	ctx.Run(expectedDoc.ID, func(ctx *kt.Context) {
 		ctx.Parallel()
-		rev, err := db.Rev(context.Background(), expectedDoc.ID)
+		_, rev, err := db.GetMeta(context.Background(), expectedDoc.ID)
 		if !ctx.IsExpectedSuccess(err) {
 			return
 		}
-		row, err := db.Get(context.Background(), expectedDoc.ID)
-		if err != nil {
-			ctx.Fatalf("Failed to get doc: %s", err)
-		}
 		doc := &testDoc{}
-		if err = row.ScanDoc(&doc); err != nil {
+		if err = db.Get(context.Background(), expectedDoc.ID).ScanDoc(&doc); err != nil {
 			ctx.Fatalf("Failed to scan doc: %s\n", err)
 		}
 		if strings.HasPrefix(expectedDoc.ID, "_local/") {
