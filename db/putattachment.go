@@ -52,7 +52,11 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			ctx.Fatalf("Failed to create doc: %s", err)
 		}
 		err = kt.Retry(func() error {
-			att := kivik.NewAttachment("test.txt", "text/plain", stringReadCloser("test content"))
+			att := &kivik.Attachment{
+				Filename:    "test.txt",
+				ContentType: "text/plain",
+				Content:     stringReadCloser("test content"),
+			}
 			_, err = db.PutAttachment(context.Background(), docID, rev, att)
 			return err
 		})
@@ -62,7 +66,11 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 		ctx.Parallel()
 		docID := ctx.TestDBName()
 		err := kt.Retry(func() error {
-			att := kivik.NewAttachment("test.txt", "text/plain", stringReadCloser("test content"))
+			att := &kivik.Attachment{
+				Filename:    "test.txt",
+				ContentType: "text/plain",
+				Content:     stringReadCloser("test content"),
+			}
 			_, err := db.PutAttachment(context.Background(), docID, "", att)
 			return err
 		})
@@ -80,7 +88,11 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			ctx.Fatalf("Failed to create doc: %s", err2)
 		}
 		err := kt.Retry(func() error {
-			att := kivik.NewAttachment("test.txt", "text/plain", stringReadCloser("test content"))
+			att := &kivik.Attachment{
+				Filename:    "test.txt",
+				ContentType: "text/plain",
+				Content:     stringReadCloser("test content"),
+			}
 			_, err := db.PutAttachment(context.Background(), docID, "5-20bd3c7d7d6b81390c6679d8bae8795b", att)
 			return err
 		})
@@ -102,7 +114,11 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			ctx.Fatalf("Failed to create design doc: %s", err)
 		}
 		err = kt.Retry(func() error {
-			att := kivik.NewAttachment("test.txt", "text/plain", stringReadCloser("test content"))
+			att := &kivik.Attachment{
+				Filename:    "test.txt",
+				ContentType: "text/plain",
+				Content:     stringReadCloser("test content"),
+			}
 			_, err = db.PutAttachment(context.Background(), docID, rev, att)
 			return err
 		})
@@ -112,7 +128,11 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 		ctx.Parallel()
 		docID := "_design/" + ctx.TestDBName()
 		err := kt.Retry(func() error {
-			att := kivik.NewAttachment("test.txt", "text/plain", stringReadCloser("test content"))
+			att := &kivik.Attachment{
+				Filename:    "test.txt",
+				ContentType: "text/plain",
+				Content:     stringReadCloser("test content"),
+			}
 			_, err := db.PutAttachment(context.Background(), docID, "", att)
 			return err
 		})
