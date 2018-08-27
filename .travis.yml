@@ -21,7 +21,6 @@ addons:
 
 install:
     - glide install
-    - go get -u gopkg.in/alecthomas/gometalinter.v1 && gometalinter.v1 --install
 
 script:
-    - gometalinter.v1 --config .linter.json ./...
+    - ./travis/test.sh
