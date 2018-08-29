@@ -31,6 +31,7 @@ const (
 	SuiteCouch17     = "couch17"
 	SuiteCouch20     = "couch20"
 	SuiteCouch21     = "couch21"
+	SuiteCouch22     = "couch22"
 	SuiteCloudant    = "cloudant"
 	SuiteKivikServer = "kivikServer"
 	SuiteKivikMemory = "kivikMemory"
@@ -42,8 +43,10 @@ var AllSuites = []string{
 	SuitePouchLocal,
 	SuitePouchRemote,
 	SuiteCouch16,
+	SuiteCouch17,
 	SuiteCouch20,
 	SuiteCouch21,
+	SuiteCouch22,
 	SuiteKivikMemory,
 	SuiteKivikFS,
 	SuiteCloudant,
@@ -57,6 +60,7 @@ var driverMap = map[string]string{
 	SuiteCouch17:     "couch",
 	SuiteCouch20:     "couch",
 	SuiteCouch21:     "couch",
+	SuiteCouch22:     "couch",
 	SuiteCloudant:    "couch",
 	SuiteKivikServer: "couch",
 	SuiteKivikMemory: "memory",
