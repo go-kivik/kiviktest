@@ -94,7 +94,13 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		return
 	}
 
-	rows, err := db.Find(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
+	var rows *kivik.Rows
+	err = kt.Retry(func() error {
+		var e error
+		rows, e = db.Find(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
+		return e
+	})
+
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
