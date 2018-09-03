@@ -32,6 +32,8 @@ type Context struct {
 	Config SuiteConfig
 	// T is the *testing.T value
 	T *testing.T
+
+	mus map[string]*sync.RWMutex
 }
 
 // Child returns a shallow copy of itself with a new t.
