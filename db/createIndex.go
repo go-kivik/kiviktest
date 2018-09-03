@@ -33,28 +33,30 @@ func testCreateIndex(ctx *kt.Context, client *kivik.Client) {
 	}
 	ctx.Run("group", func(ctx *kt.Context) {
 		ctx.Run("Valid", func(ctx *kt.Context) {
-			ctx.Parallel()
-			ctx.CheckError(db.CreateIndex(context.Background(), "", "", `{"fields":["foo"]}`))
+			doCreateIndex(ctx, db, `{"fields":["foo"]}`)
 		})
 		ctx.Run("NilIndex", func(ctx *kt.Context) {
-			ctx.Parallel()
-			ctx.CheckError(db.CreateIndex(context.Background(), "", "", nil))
+			doCreateIndex(ctx, db, nil)
 		})
 		ctx.Run("BlankIndex", func(ctx *kt.Context) {
-			ctx.Parallel()
-			ctx.CheckError(db.CreateIndex(context.Background(), "", "", ""))
+			doCreateIndex(ctx, db, "")
 		})
 		ctx.Run("EmptyIndex", func(ctx *kt.Context) {
-			ctx.Parallel()
-			ctx.CheckError(db.CreateIndex(context.Background(), "", "", "{}"))
+			doCreateIndex(ctx, db, "{}")
 		})
 		ctx.Run("InvalidIndex", func(ctx *kt.Context) {
-			ctx.Parallel()
-			ctx.CheckError(db.CreateIndex(context.Background(), "", "", `{"oink":true}`))
+			doCreateIndex(ctx, db, `{"oink":true}`)
 		})
 		ctx.Run("InvalidJSON", func(ctx *kt.Context) {
-			ctx.Parallel()
-			ctx.CheckError(db.CreateIndex(context.Background(), "", "", `chicken`))
+			doCreateIndex(ctx, db, `chicken`)
 		})
 	})
+}
+
+func doCreateIndex(ctx *kt.Context, db *kivik.DB, index interface{}) {
+	ctx.Parallel()
+	err := kt.Retry(func() error {
+		return db.CreateIndex(context.Background(), "", "", index)
+	})
+	ctx.CheckError(err)
 }
