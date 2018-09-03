@@ -4,22 +4,23 @@ import "sync"
 
 // Lock establishes a lock on name.
 func (c *Context) Lock(name string) {
-	c.getMU(name).Lock()
+	l := c.getMU(name)
+	l.Lock()
+	c.locks = append(c.locks, l.Unlock)
 }
 
 // RLock establishes a read lock on name.
 func (c *Context) RLock(name string) {
-	c.getMU(name).RLock()
+	l := c.getMU(name)
+	l.RLock()
+	c.locks = append(c.locks, l.RUnlock)
 }
 
-// Unlock releases a lock on name.
-func (c *Context) Unlock(name string) {
-	c.getMU(name).Unlock()
-}
-
-// RUnlock releases a read lock on name.
-func (c *Context) RUnlock(name string) {
-	c.getMU(name).RUnlock()
+// Unlock unlocks any open locks established at this test level.
+func (c *Context) Unlock() {
+	for _, l := range c.locks {
+		l()
+	}
 }
 
 func (c *Context) getMU(name string) *sync.RWMutex {
