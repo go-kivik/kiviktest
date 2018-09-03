@@ -32,9 +32,15 @@ type Context struct {
 	Config SuiteConfig
 	// T is the *testing.T value
 	T *testing.T
+
+	mus map[string]*sync.RWMutex
+	// locks is a list of locks cancelers at this level--will be automatically
+	// released when the scope terminates.
+	locks []func()
 }
 
-// Child returns a shallow copy of itself with a new t.
+// Child returns a shallow copy of itself with a new t. c.locks is intentionally
+// not cloned, as it should only exist per test run level.
 func (c *Context) Child(t *testing.T) *Context {
 	return &Context{
 		RW:          c.RW,
@@ -44,6 +50,7 @@ func (c *Context) Child(t *testing.T) *Context {
 		CHTTPNoAuth: c.CHTTPNoAuth,
 		Config:      c.Config,
 		T:           t,
+		mus:         c.mus,
 	}
 }
 
@@ -159,6 +166,7 @@ func (c *Context) IsSet(key string) bool {
 func (c *Context) Run(name string, fn testFunc) {
 	c.T.Run(name, func(t *testing.T) {
 		ctx := c.Child(t)
+		defer ctx.Unlock()
 		ctx.Skip()
 		fn(ctx)
 	})
