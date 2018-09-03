@@ -14,7 +14,7 @@ func init() {
 func getAttachmentMeta(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
-		defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
+		defer ctx.DestroyDB(dbname)
 		adb, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
 		if err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)

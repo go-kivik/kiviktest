@@ -26,7 +26,7 @@ func createIndex(ctx *kt.Context) {
 
 func testCreateIndex(ctx *kt.Context, client *kivik.Client) {
 	dbname := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
+	defer ctx.DestroyDB(dbname)
 	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
 	if err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)

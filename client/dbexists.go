@@ -24,7 +24,7 @@ func dbExists(ctx *kt.Context) {
 	})
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
-		defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
+		defer ctx.DestroyDB(dbName)
 		ctx.Run("group", func(ctx *kt.Context) {
 			ctx.RunAdmin(func(ctx *kt.Context) {
 				checkDBExists(ctx, ctx.Admin, dbName)

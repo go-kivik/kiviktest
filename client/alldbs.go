@@ -32,9 +32,8 @@ func allDBs(ctx *kt.Context) {
 }
 
 func testAllDBsRW(ctx *kt.Context) {
-	admin := ctx.Admin
 	dbName := ctx.TestDB()
-	defer admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
+	defer ctx.DestroyDB(dbName)
 	expected := append(ctx.StringSlice("expected"), dbName)
 	ctx.Run("group", func(ctx *kt.Context) {
 		ctx.RunAdmin(func(ctx *kt.Context) {
