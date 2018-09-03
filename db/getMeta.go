@@ -15,7 +15,7 @@ func init() {
 func getMeta(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
-		defer ctx.Admin.DestroyDB(context.Background(), dbName, ctx.Options("db")) // nolint: errcheck
+		defer ctx.DestroyDB(dbName)
 		db, err := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
 		if err != nil {
 			ctx.Fatalf("Failed to connect to test db: %s", err)

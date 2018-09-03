@@ -40,8 +40,8 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 	}
 	dbtarget := prefix + ctx.TestDB()
 	dbsource := prefix + ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbtarget, ctx.Options("db")) // nolint: errcheck
-	defer ctx.Admin.DestroyDB(context.Background(), dbsource, ctx.Options("db")) // nolint: errcheck
+	defer ctx.DestroyDB(dbtarget)
+	defer ctx.DestroyDB(dbsource)
 
 	db, err := ctx.Admin.DB(context.Background(), dbsource)
 	if err != nil {

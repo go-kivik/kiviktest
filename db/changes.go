@@ -30,7 +30,7 @@ const maxWait = 5 * time.Second
 func testChanges(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
-	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
+	defer ctx.DestroyDB(dbname)
 	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
 	if err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
