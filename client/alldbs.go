@@ -15,17 +15,20 @@ func init() {
 }
 
 func allDBs(ctx *kt.Context) {
-	ctx.RunAdmin(func(ctx *kt.Context) {
-		testAllDBs(ctx, ctx.Admin, ctx.StringSlice("expected"))
-	})
-	ctx.RunNoAuth(func(ctx *kt.Context) {
-		testAllDBs(ctx, ctx.NoAuth, ctx.StringSlice("expected"))
-	})
-	if ctx.RW && ctx.Admin != nil {
-		ctx.Run("RW", func(ctx *kt.Context) {
-			testAllDBsRW(ctx)
+	ctx.Run("lock", func(ctx *kt.Context) {
+		ctx.Lock("alldbs")
+		ctx.RunAdmin(func(ctx *kt.Context) {
+			testAllDBs(ctx, ctx.Admin, ctx.StringSlice("expected"))
 		})
-	}
+		ctx.RunNoAuth(func(ctx *kt.Context) {
+			testAllDBs(ctx, ctx.NoAuth, ctx.StringSlice("expected"))
+		})
+		if ctx.RW && ctx.Admin != nil {
+			ctx.Run("RW", func(ctx *kt.Context) {
+				testAllDBsRW(ctx)
+			})
+		}
+	})
 }
 
 func testAllDBsRW(ctx *kt.Context) {
