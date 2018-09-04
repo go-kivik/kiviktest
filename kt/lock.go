@@ -24,13 +24,14 @@ func (c *Context) Unlock() {
 }
 
 func (c *Context) getMU(name string) *sync.RWMutex {
+	lockName := tSuite(c.T) + "/" + name
 	if c.mus == nil {
 		c.mus = make(map[string]*sync.RWMutex)
 	}
-	mu, ok := c.mus[name]
+	mu, ok := c.mus[lockName]
 	if !ok {
 		mu = &sync.RWMutex{}
-		c.mus[name] = mu
+		c.mus[lockName] = mu
 	}
 	return mu
 }
