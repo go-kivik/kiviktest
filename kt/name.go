@@ -2,9 +2,7 @@
 
 package kt
 
-import (
-	"testing"
-)
+import "testing"
 
 func tName(t *testing.T) string {
 	return t.Name()

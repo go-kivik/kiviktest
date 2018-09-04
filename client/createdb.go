@@ -12,15 +12,12 @@ func init() {
 }
 
 func createDB(ctx *kt.Context) {
-	ctx.Run("lock", func(ctx *kt.Context) {
-		ctx.RLock("alldbs")
-		ctx.RunRW(func(ctx *kt.Context) {
-			ctx.RunAdmin(func(ctx *kt.Context) {
-				testCreateDB(ctx, ctx.Admin)
-			})
-			ctx.RunNoAuth(func(ctx *kt.Context) {
-				testCreateDB(ctx, ctx.NoAuth)
-			})
+	ctx.RunRW(func(ctx *kt.Context) {
+		ctx.RunAdmin(func(ctx *kt.Context) {
+			testCreateDB(ctx, ctx.Admin)
+		})
+		ctx.RunNoAuth(func(ctx *kt.Context) {
+			testCreateDB(ctx, ctx.NoAuth)
 		})
 	})
 }
