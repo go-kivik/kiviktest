@@ -41,9 +41,9 @@ func testPut(ctx *kt.Context, client *kivik.Client) {
 			}
 			var rev string
 			err := kt.Retry(func() error {
-				var err error
-				rev, err = db.Put(context.Background(), doc.ID, doc)
-				return err
+				var e error
+				rev, e = db.Put(context.Background(), doc.ID, doc)
+				return e
 			})
 			if !ctx.IsExpectedSuccess(err) {
 				return
@@ -51,7 +51,10 @@ func testPut(ctx *kt.Context, client *kivik.Client) {
 			doc.Rev = rev
 			doc.Age = 40
 			ctx.Run("Update", func(ctx *kt.Context) {
-				_, err = db.Put(context.Background(), doc.ID, doc)
+				err := kt.Retry(func() error {
+					_, e := db.Put(context.Background(), doc.ID, doc)
+					return e
+				})
 				ctx.CheckError(err)
 			})
 		})

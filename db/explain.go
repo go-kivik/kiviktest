@@ -65,7 +65,12 @@ func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string) {
 		return
 	}
 
-	plan, err := db.Explain(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
+	var plan *kivik.QueryPlan
+	err = kt.Retry(func() error {
+		var e error
+		plan, e = db.Explain(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
+		return e
+	})
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
