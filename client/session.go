@@ -61,8 +61,8 @@ func testSession(ctx *kt.Context, client *chttp.Client) {
 		"info.authenticated":           uCtx.Info.AuthMethod,
 		"info.authentication_db":       uCtx.Info.AuthDB,
 		"info.authentication_handlers": strings.Join(uCtx.Info.AuthHandlers, ","),
-		"ok":                           fmt.Sprintf("%t", uCtx.OK),
-		"userCtx.roles":                strings.Join(uCtx.UserCtx.Roles, ","),
+		"ok":            fmt.Sprintf("%t", uCtx.OK),
+		"userCtx.roles": strings.Join(uCtx.UserCtx.Roles, ","),
 	}
 	for key, actual := range values {
 		expected := ctx.MustString(key)
@@ -94,7 +94,7 @@ func testCreateSession(ctx *kt.Context, client *chttp.Client) {
 		ctx.Skipf("No CHTTP client")
 	}
 	// Re-create client, so we can override defaults
-	client, _ = chttp.New(context.Background(), client.DSN())
+	client, _ = chttp.New(client.DSN())
 	// Don't follow redirect
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		return http.ErrUseLastResponse
@@ -267,7 +267,7 @@ func testDeleteSession(ctx *kt.Context, client *chttp.Client) {
 		ctx.Skipf("No CHTTP client")
 	}
 	// Re-create client, so we can override defaults
-	client, _ = chttp.New(context.Background(), client.DSN())
+	client, _ = chttp.New(client.DSN())
 	// Don't save sessions
 	client.Jar = nil
 	var cookie *http.Cookie
