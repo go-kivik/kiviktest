@@ -410,7 +410,7 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	} else {
 		return nil, err
 	}
-	if chttpClient, err := chttp.New(context.Background(), dsn); err == nil {
+	if chttpClient, err := chttp.New(dsn); err == nil {
 		clients.CHTTPAdmin = chttpClient
 	} else {
 		return nil, err
@@ -422,7 +422,7 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	} else {
 		return nil, err
 	}
-	if chttpClient, err := chttp.New(context.Background(), noAuthDSN); err == nil {
+	if chttpClient, err := chttp.New(noAuthDSN); err == nil {
 		clients.CHTTPNoAuth = chttpClient
 	} else {
 		return nil, err

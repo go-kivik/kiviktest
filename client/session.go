@@ -94,7 +94,7 @@ func testCreateSession(ctx *kt.Context, client *chttp.Client) {
 		ctx.Skipf("No CHTTP client")
 	}
 	// Re-create client, so we can override defaults
-	client, _ = chttp.New(context.Background(), client.DSN())
+	client, _ = chttp.New(client.DSN())
 	// Don't follow redirect
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		return http.ErrUseLastResponse
@@ -267,7 +267,7 @@ func testDeleteSession(ctx *kt.Context, client *chttp.Client) {
 		ctx.Skipf("No CHTTP client")
 	}
 	// Re-create client, so we can override defaults
-	client, _ = chttp.New(context.Background(), client.DSN())
+	client, _ = chttp.New(client.DSN())
 	// Don't save sessions
 	client.Jar = nil
 	var cookie *http.Cookie
