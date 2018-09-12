@@ -89,7 +89,7 @@ type Options struct {
 // CleanupTests attempts to clean up any stray test databases created by a
 // previous test run.
 func CleanupTests(driver, dsn string, verbose bool) error {
-	client, err := kivik.New(context.Background(), driver, dsn)
+	client, err := kivik.New(driver, dsn)
 	if err != nil {
 		return err
 	}
@@ -405,7 +405,7 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	}
 	clients := &kt.Context{}
 	t.Logf("Connecting to %s ...\n", dsn)
-	if client, err := kivik.New(context.Background(), driverName, dsn); err == nil {
+	if client, err := kivik.New(driverName, dsn); err == nil {
 		clients.Admin = client
 	} else {
 		return nil, err
@@ -417,7 +417,7 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	}
 
 	t.Logf("Connecting to %s ...\n", noAuthDSN)
-	if client, err := kivik.New(context.Background(), driverName, noAuthDSN); err == nil {
+	if client, err := kivik.New(driverName, noAuthDSN); err == nil {
 		clients.NoAuth = client
 	} else {
 		return nil, err

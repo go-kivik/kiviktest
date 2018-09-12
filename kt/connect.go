@@ -1,7 +1,6 @@
 package kt
 
 import (
-	"context"
 	"net/url"
 	"os"
 	"testing"
@@ -38,7 +37,7 @@ func NoAuthDSN(t *testing.T) string {
 }
 
 func connect(dsn string, t *testing.T) *kivik.Client {
-	client, err := kivik.New(context.Background(), "couch", dsn)
+	client, err := kivik.New("couch", dsn)
 	if err != nil {
 		t.Fatalf("Failed to connect to '%s': %s", dsn, err)
 	}
