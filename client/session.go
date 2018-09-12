@@ -61,8 +61,8 @@ func testSession(ctx *kt.Context, client *chttp.Client) {
 		"info.authenticated":           uCtx.Info.AuthMethod,
 		"info.authentication_db":       uCtx.Info.AuthDB,
 		"info.authentication_handlers": strings.Join(uCtx.Info.AuthHandlers, ","),
-		"ok":            fmt.Sprintf("%t", uCtx.OK),
-		"userCtx.roles": strings.Join(uCtx.UserCtx.Roles, ","),
+		"ok":                           fmt.Sprintf("%t", uCtx.OK),
+		"userCtx.roles":                strings.Join(uCtx.UserCtx.Roles, ","),
 	}
 	for key, actual := range values {
 		expected := ctx.MustString(key)
