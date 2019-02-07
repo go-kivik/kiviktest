@@ -15,8 +15,8 @@ func copy(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
-		db, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-		if err != nil {
+		db := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
 
@@ -68,8 +68,8 @@ func copy(ctx *kt.Context) {
 func copyTest(ctx *kt.Context, client *kivik.Client, dbname string, source map[string]string) {
 	ctx.Run(source["_id"], func(ctx *kt.Context) {
 		ctx.Parallel()
-		db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-		if err != nil {
+		db := client.DB(context.Background(), dbname, ctx.Options("db"))
+		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
 		targetID := ctx.TestDBName()

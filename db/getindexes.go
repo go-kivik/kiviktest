@@ -49,11 +49,11 @@ func roGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	dba, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	dba := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := dba.Err(); err != nil {
 		ctx.Fatalf("Failed to open db as admin: %s", err)
 	}
-	if err = dba.CreateIndex(context.Background(), "foo", "bar", `{"fields":["foo"]}`); err != nil {
+	if err := dba.CreateIndex(context.Background(), "foo", "bar", `{"fields":["foo"]}`); err != nil {
 		ctx.Fatalf("Failed to create index: %s", err)
 	}
 	indexes := ctx.Interface("indexes")
@@ -76,8 +76,8 @@ func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 }
 
 func testGetIndexes(ctx *kt.Context, client *kivik.Client, dbname string, expected interface{}) {
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
 	indexes, err := db.GetIndexes(context.Background())

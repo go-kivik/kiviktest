@@ -28,12 +28,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	adb, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := adb.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db as admin: %s", err)
 	}
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db: %s", err)
 	}
 	ctx.Run("group", func(ctx *kt.Context) {

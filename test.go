@@ -170,10 +170,10 @@ func cleanupDatabases(ctx context.Context, client *kivik.Client, verbose bool) (
 			count++
 		}
 	}
-	replicator, err := client.DB(context.Background(), "_replicator")
-	if err != nil {
-		if kivik.StatusCode(err) != kivik.StatusNotFound && kivik.StatusCode(err) != kivik.StatusNotImplemented {
-			return count, err
+	replicator := client.DB(context.Background(), "_replicator")
+	if e := replicator.Err(); e != nil {
+		if kivik.StatusCode(e) != kivik.StatusNotFound && kivik.StatusCode(e) != kivik.StatusNotImplemented {
+			return count, e
 		}
 		return count, nil
 	}
@@ -205,8 +205,8 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	if verbose {
 		fmt.Printf("Cleaning up stale users\n")
 	}
-	db, err := client.DB(ctx, "_users")
-	if err != nil {
+	db := client.DB(ctx, "_users")
+	if err := db.Err(); err != nil {
 		switch kivik.StatusCode(err) {
 		case kivik.StatusNotFound, kivik.StatusNotImplemented:
 			return 0, nil
@@ -246,8 +246,8 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 	if verbose {
 		fmt.Printf("Cleaning up stale replications\n")
 	}
-	db, err := client.DB(ctx, "_replicator")
-	if err != nil {
+	db := client.DB(ctx, "_replicator")
+	if err := db.Err(); err != nil {
 		switch kivik.StatusCode(err) {
 		case kivik.StatusNotFound, kivik.StatusNotImplemented:
 			return 0, nil

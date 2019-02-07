@@ -43,8 +43,8 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 	defer ctx.DestroyDB(dbtarget)
 	defer ctx.DestroyDB(dbsource)
 
-	db, err := ctx.Admin.DB(context.Background(), dbsource)
-	if err != nil {
+	db := ctx.Admin.DB(context.Background(), dbsource)
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
 

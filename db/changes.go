@@ -31,8 +31,8 @@ func testChanges(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
 	}
 	changes, err := db.Changes(context.Background())

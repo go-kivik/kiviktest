@@ -49,11 +49,11 @@ func security(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
-		db, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-		if err != nil {
+		db := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
-		err = kt.Retry(func() error {
+		err := kt.Retry(func() error {
 			return db.SetSecurity(context.Background(), sec)
 		})
 		if err != nil {
@@ -98,11 +98,11 @@ func testSetSecurityTests(ctx *kt.Context, client *kivik.Client) {
 }
 
 func testSetSecurity(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
-	err = kt.Retry(func() error {
+	err := kt.Retry(func() error {
 		return db.SetSecurity(context.Background(), sec)
 	})
 	ctx.CheckError(err)
@@ -110,8 +110,8 @@ func testSetSecurity(ctx *kt.Context, client *kivik.Client, dbname string) {
 
 func testGetSecurity(ctx *kt.Context, client *kivik.Client, dbname string, expected *kivik.Security) {
 	sec, err := func() (*kivik.Security, error) {
-		db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-		if err != nil {
+		db := client.DB(context.Background(), dbname, ctx.Options("db"))
+		if err := db.Err(); err != nil {
 			return nil, err
 		}
 		return db.Security(context.Background())

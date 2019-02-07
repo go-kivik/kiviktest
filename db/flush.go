@@ -24,8 +24,8 @@ func flushTest(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	for _, dbName := range ctx.MustStringSlice("databases") {
 		ctx.Run(dbName, func(ctx *kt.Context) {
-			db, err := client.DB(context.Background(), dbName, ctx.Options("db"))
-			if !ctx.IsExpectedSuccess(err) {
+			db := client.DB(context.Background(), dbName, ctx.Options("db"))
+			if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 				return
 			}
 			ctx.Run("DoFlush", func(ctx *kt.Context) {
