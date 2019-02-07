@@ -29,8 +29,8 @@ func createDoc(ctx *kt.Context) {
 }
 
 func testCreate(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to database: %s", err)
 	}
 	ctx.Run("WithoutID", func(ctx *kt.Context) {

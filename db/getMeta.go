@@ -16,8 +16,8 @@ func getMeta(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
 		defer ctx.DestroyDB(dbName)
-		db, err := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
-		if err != nil {
+		db := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to connect to test db: %s", err)
 		}
 		doc := &testDoc{
@@ -50,8 +50,8 @@ func getMeta(ctx *kt.Context) {
 		ctx.Run("group", func(ctx *kt.Context) {
 			ctx.RunAdmin(func(ctx *kt.Context) {
 				ctx.Parallel()
-				db, err := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
-				if !ctx.IsExpectedSuccess(err) {
+				db := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+				if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 					return
 				}
 				testGetMeta(ctx, db, doc)
@@ -61,8 +61,8 @@ func getMeta(ctx *kt.Context) {
 			})
 			ctx.RunNoAuth(func(ctx *kt.Context) {
 				ctx.Parallel()
-				db, err := ctx.NoAuth.DB(context.Background(), dbName, ctx.Options("db"))
-				if !ctx.IsExpectedSuccess(err) {
+				db := ctx.NoAuth.DB(context.Background(), dbName, ctx.Options("db"))
+				if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 					return
 				}
 				testGetMeta(ctx, db, doc)

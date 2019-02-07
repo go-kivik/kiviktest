@@ -26,12 +26,12 @@ func testCreateDB(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbName := ctx.TestDBName()
 	defer ctx.DestroyDB(dbName)
-	_, err := client.CreateDB(context.Background(), dbName, ctx.Options("db"))
+	err := client.CreateDB(context.Background(), dbName, ctx.Options("db")).Err()
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
 	ctx.Run("Recreate", func(ctx *kt.Context) {
-		_, err := client.CreateDB(context.Background(), dbName, ctx.Options("db"))
+		err := client.CreateDB(context.Background(), dbName, ctx.Options("db")).Err()
 		ctx.CheckError(err)
 	})
 }

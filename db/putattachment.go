@@ -32,13 +32,13 @@ func putAttachment(ctx *kt.Context) {
 }
 
 func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db, e := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if e != nil {
-		ctx.Fatalf("Failed to open db: %s", e)
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
+		ctx.Fatalf("Failed to open db: %s", err)
 	}
-	adb, e2 := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-	if e2 != nil {
-		ctx.Fatalf("Failed to open admin db: %s", e2)
+	adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := adb.Err(); err != nil {
+		ctx.Fatalf("Failed to open admin db: %s", err)
 	}
 	ctx.Run("Update", func(ctx *kt.Context) {
 		ctx.Parallel()

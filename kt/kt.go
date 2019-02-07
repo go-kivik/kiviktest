@@ -198,8 +198,7 @@ func (c *Context) TestDB() string {
 	var dbname string
 	err := Retry(func() error {
 		dbname = c.TestDBName()
-		_, err := c.Admin.CreateDB(context.Background(), dbname, c.Options("db"))
-		return err
+		return c.Admin.CreateDB(context.Background(), dbname, c.Options("db")).Err()
 	})
 	if err != nil {
 		c.Fatalf("Failed to create database: %s", err)

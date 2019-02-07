@@ -58,15 +58,15 @@ func testExplain(ctx *kt.Context, client *kivik.Client) {
 
 func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string) {
 	ctx.Parallel()
-	db, err := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(context.Background(), dbName, ctx.Options("db"))
 	// Errors may be deferred here, so only return if we actually get
 	// an error.
-	if err != nil && !ctx.IsExpectedSuccess(err) {
+	if err := db.Err(); err != nil && !ctx.IsExpectedSuccess(err) {
 		return
 	}
 
 	var plan *kivik.QueryPlan
-	err = kt.Retry(func() error {
+	err := kt.Retry(func() error {
 		var e error
 		plan, e = db.Explain(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
 		return e

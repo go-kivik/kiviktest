@@ -32,12 +32,12 @@ func testDelete(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbName := ctx.TestDB()
 	defer ctx.DestroyDB(dbName)
-	admdb, err := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
-	if err != nil {
+	admdb := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+	if err := admdb.Err(); err != nil {
 		ctx.Errorf("Failed to connect to db as admin: %s", err)
 	}
-	db, err := client.DB(context.Background(), dbName, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbName, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Errorf("Failed to connect to db: %s", err)
 		return
 	}

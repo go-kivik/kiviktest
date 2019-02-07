@@ -57,8 +57,8 @@ var ddoc = map[string]interface{}{
 
 func setUpQueryTest(ctx *kt.Context) (dbName string, docIDs []string, err error) {
 	dbName = ctx.TestDB()
-	db, err := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
-	if err != nil {
+	db := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		return dbName, nil, errors.Wrap(err, "failed to connect to db")
 	}
 	if _, err := db.Put(context.Background(), ddoc["_id"].(string), ddoc); err != nil {
@@ -97,10 +97,10 @@ func doQueryTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset
 
 func doQueryTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string, expOffset int64, expected []string) {
 	ctx.Parallel()
-	db, err := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(context.Background(), dbName, ctx.Options("db"))
 	// Errors may be deferred here, so only return if we actually get
 	// an error.
-	if err != nil && !ctx.IsExpectedSuccess(err) {
+	if err := db.Err(); err != nil && !ctx.IsExpectedSuccess(err) {
 		return
 	}
 
@@ -140,10 +140,10 @@ func doQueryTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string
 
 func doQueryTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, expOffset int64, expected []string) {
 	ctx.Parallel()
-	db, err := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(context.Background(), dbName, ctx.Options("db"))
 	// Errors may be deferred here, so only return if we actually get
 	// an error.
-	if err != nil && !ctx.IsExpectedSuccess(err) {
+	if err := db.Err(); err != nil && !ctx.IsExpectedSuccess(err) {
 		return
 	}
 	opts := map[string]interface{}{

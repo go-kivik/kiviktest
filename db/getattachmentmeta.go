@@ -15,8 +15,8 @@ func getAttachmentMeta(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
-		adb, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-		if err != nil {
+		adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+		if err := adb.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
 
@@ -66,8 +66,8 @@ func getAttachmentMeta(ctx *kt.Context) {
 func testGetAttachmentMeta(ctx *kt.Context, client *kivik.Client, dbname, docID, filename string) {
 	ctx.Run(docID+"/"+filename, func(ctx *kt.Context) {
 		ctx.Parallel()
-		db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-		if err != nil {
+		db := client.DB(context.Background(), dbname, ctx.Options("db"))
+		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to connect to db")
 		}
 		att, err := db.GetAttachmentMeta(context.Background(), docID, "", filename)

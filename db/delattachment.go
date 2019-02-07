@@ -35,8 +35,8 @@ func delAttachment(ctx *kt.Context) {
 }
 
 func testDeleteAttachmentNoDoc(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db")
 	}
 	ctx.Run("NoDoc", func(ctx *kt.Context) {
@@ -59,14 +59,13 @@ func testDeleteAttachmentsDDoc(ctx *kt.Context, client *kivik.Client, dbname, fi
 }
 
 func doDeleteAttachmentTest(ctx *kt.Context, client *kivik.Client, dbname, docID, filename string) {
-
-	db, err := client.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db")
 	}
 	ctx.Parallel()
-	adb, err := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
-	if err != nil {
+	adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	if err := adb.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
 	doc := map[string]interface{}{
