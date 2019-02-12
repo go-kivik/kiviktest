@@ -70,7 +70,7 @@ func testGetAttachments(ctx *kt.Context, client *kivik.Client, dbname, docID, fi
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to connect to db")
 		}
-		att, err := db.GetAttachment(context.Background(), docID, "", filename)
+		att, err := db.GetAttachment(context.Background(), docID, filename)
 		if !ctx.IsExpectedSuccess(err) {
 			return
 		}
