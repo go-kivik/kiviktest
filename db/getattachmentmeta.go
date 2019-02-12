@@ -70,7 +70,7 @@ func testGetAttachmentMeta(ctx *kt.Context, client *kivik.Client, dbname, docID,
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to connect to db")
 		}
-		att, err := db.GetAttachmentMeta(context.Background(), docID, "", filename)
+		att, err := db.GetAttachmentMeta(context.Background(), docID, filename)
 		if !ctx.IsExpectedSuccess(err) {
 			return
 		}
