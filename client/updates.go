@@ -28,7 +28,7 @@ const maxWait = 5 * time.Second
 
 func testUpdates(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
-	updates, err := client.DBUpdates()
+	updates, err := client.DBUpdates(context.TODO())
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
