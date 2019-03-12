@@ -52,7 +52,7 @@ func testUpdates(ctx *kt.Context, client *kivik.Client) {
 		close(eventErrors)
 	}()
 	defer ctx.DestroyDB(dbname)
-	if err = ctx.Admin.CreateDB(context.Background(), dbname, ctx.Options("db")).Err(); err != nil {
+	if err = ctx.Admin.CreateDB(context.Background(), dbname, ctx.Options("db")); err != nil {
 		ctx.Fatalf("Failed to create db: %s", err)
 	}
 	timer := time.NewTimer(maxWait)
