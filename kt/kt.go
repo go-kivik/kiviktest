@@ -195,10 +195,9 @@ const TestDBPrefix = "kivik$"
 
 // TestDB creates a test database and returns its name.
 func (c *Context) TestDB() string {
-	var dbname string
+	dbname := c.TestDBName()
 	err := Retry(func() error {
-		dbname = c.TestDBName()
-		return c.Admin.CreateDB(context.Background(), dbname, c.Options("db")).Err()
+		return c.Admin.CreateDB(context.Background(), dbname, c.Options("db"))
 	})
 	if err != nil {
 		c.Fatalf("Failed to create database: %s", err)
