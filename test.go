@@ -32,6 +32,7 @@ const (
 	SuiteCouch20     = "couch20"
 	SuiteCouch21     = "couch21"
 	SuiteCouch22     = "couch22"
+	SuiteCouch23     = "couch23"
 	SuiteCloudant    = "cloudant"
 	SuiteKivikServer = "kivikServer"
 	SuiteKivikMemory = "kivikMemory"
