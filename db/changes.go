@@ -13,13 +13,15 @@ func init() {
 }
 
 func changes(ctx *kt.Context) {
-	ctx.RunRW(func(ctx *kt.Context) {
-		ctx.Run("group", func(ctx *kt.Context) {
-			ctx.RunAdmin(func(ctx *kt.Context) {
-				testChanges(ctx, ctx.Admin)
-			})
-			ctx.RunNoAuth(func(ctx *kt.Context) {
-				testChanges(ctx, ctx.NoAuth)
+	ctx.Run("Continuous", func(ctx *kt.Context) {
+		ctx.RunRW(func(ctx *kt.Context) {
+			ctx.Run("group", func(ctx *kt.Context) {
+				ctx.RunAdmin(func(ctx *kt.Context) {
+					testContinuousChanges(ctx, ctx.Admin)
+				})
+				ctx.RunNoAuth(func(ctx *kt.Context) {
+					testContinuousChanges(ctx, ctx.NoAuth)
+				})
 			})
 		})
 	})
@@ -27,7 +29,7 @@ func changes(ctx *kt.Context) {
 
 const maxWait = 5 * time.Second
 
-func testChanges(ctx *kt.Context, client *kivik.Client) {
+func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
