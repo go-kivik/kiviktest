@@ -37,7 +37,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
 	}
-	changes, err := db.Changes(context.Background())
+	changes, err := db.Changes(context.Background(), ctx.Options("options"))
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
