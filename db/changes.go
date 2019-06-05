@@ -187,9 +187,6 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 	}
 	expected = append(expected, rev)
 
-	// Let the updates settle
-	time.Sleep(2 * time.Second)
-
 	changes, err := db.Changes(context.Background(), ctx.Options("options"))
 	if !ctx.IsExpectedSuccess(err) {
 		return
@@ -197,13 +194,7 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 
 	revs := make([]string, 0, 3)
 	for changes.Next() {
-		for _, ch := range changes.Changes() {
-			revs = append(revs, ch)
-			if ch == expected[len(expected)-1] {
-				// We got the last one
-				_ = changes.Close()
-			}
-		}
+		revs = append(revs, changes.Changes()...)
 		if len(revs) >= len(expected) {
 			_ = changes.Close()
 		}
