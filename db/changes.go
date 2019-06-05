@@ -5,6 +5,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/flimzy/diff"
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
 )
@@ -78,6 +79,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 	}
 	expected = append(expected, rev)
 	doc.Rev = rev
+	time.Sleep(10 * time.Millisecond) // Pause to ensure that the update counts as a separate rev; especially problematic on PouchDB
 	rev, err = db.Delete(context.Background(), doc.ID, doc.Rev)
 	if err != nil {
 		ctx.Fatalf("Failed to delete doc: %s", err)
@@ -87,13 +89,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 	errChan := make(chan error)
 	go func() {
 		for changes.Next() {
-			for _, ch := range changes.Changes() {
-				revs = append(revs, ch)
-				if ch == expected[len(expected)-1] {
-					// We got the last one
-					_ = changes.Close()
-				}
-			}
+			revs = append(revs, changes.Changes()...)
 			if len(revs) >= len(expected) {
 				_ = changes.Close()
 			}
@@ -125,8 +121,8 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 			ctx.Errorf("Unexpected rev in changes feed: %s", rev)
 		}
 	}
-	if len(expected) != len(revs) || expected[len(expected)-1] != revs[len(revs)-1] {
-		ctx.Errorf("Did not receive final change.")
+	if d := diff.TextSlices(expected, revs); d != nil {
+		ctx.Errorf("Unexpected revisions:\n%s", d)
 	}
 	if err = changes.Close(); err != nil {
 		ctx.Errorf("Error closing changes feed: %s", err)
@@ -213,8 +209,8 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 	}
 	sort.Strings(expected)
 	sort.Strings(revs)
-	if len(expected) != len(revs) || expected[len(expected)-1] != revs[len(revs)-1] {
-		ctx.Errorf("Did not receive final change.")
+	if d := diff.TextSlices(expected, revs); d != nil {
+		ctx.Errorf("Unexpected revisions:\n%s", d)
 	}
 	if err = changes.Close(); err != nil {
 		ctx.Errorf("Error closing changes feed: %s", err)
