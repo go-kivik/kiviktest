@@ -62,6 +62,7 @@ var driverMap = map[string]string{
 	SuiteCouch20:     "couch",
 	SuiteCouch21:     "couch",
 	SuiteCouch22:     "couch",
+	SuiteCouch23:     "couch",
 	SuiteCloudant:    "couch",
 	SuiteKivikServer: "couch",
 	SuiteKivikMemory: "memory",
