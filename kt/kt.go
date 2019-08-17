@@ -272,7 +272,7 @@ func (c *Context) Parallel() {
 // failures. All other failures are returned.
 func Retry(fn func() error) error {
 	var err error
-	for i := 0; i < 3; i++ {
+	for i := 0; i < 25; i++ {
 		err = fn()
 		if err != nil {
 			msg := strings.TrimSpace(err.Error())
@@ -282,6 +282,7 @@ func Retry(fn func() error) error {
 				strings.HasSuffix(msg, ": http: server closed idle connection") ||
 				strings.HasSuffix(msg, "read: connection reset by peer") {
 				fmt.Printf("Retrying after error: %s\n", err)
+				time.Sleep(500 * time.Millisecond)
 				continue
 			}
 		}
