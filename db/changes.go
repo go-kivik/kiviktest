@@ -5,7 +5,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
+
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
 )
@@ -121,7 +122,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 			ctx.Errorf("Unexpected rev in changes feed: %s", rev)
 		}
 	}
-	if d := diff.TextSlices(expected, revs); d != nil {
+	if d := testy.DiffTextSlices(expected, revs); d != nil {
 		ctx.Errorf("Unexpected revisions:\n%s", d)
 	}
 	if err = changes.Close(); err != nil {
@@ -209,7 +210,7 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 	}
 	sort.Strings(expected)
 	sort.Strings(revs)
-	if d := diff.TextSlices(expected, revs); d != nil {
+	if d := testy.DiffTextSlices(expected, revs); d != nil {
 		ctx.Errorf("Unexpected revisions:\n%s", d)
 	}
 	if err = changes.Close(); err != nil {

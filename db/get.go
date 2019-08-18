@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -94,7 +94,7 @@ func testGet(ctx *kt.Context, db *kivik.DB, expectedDoc *testDoc) {
 		if !ctx.IsExpectedSuccess(db.Get(context.Background(), expectedDoc.ID).ScanDoc(&doc)) {
 			return
 		}
-		if d := diff.AsJSON(expectedDoc, doc); d != nil {
+		if d := testy.DiffAsJSON(expectedDoc, doc); d != nil {
 			ctx.Errorf("Fetched document not as expected:\n%s\n", d)
 		}
 	})

@@ -4,7 +4,7 @@ import (
 	"context"
 	"sort"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -50,7 +50,7 @@ func testAllDBs(ctx *kt.Context, client *kivik.Client, expected []string) {
 	}
 	sort.Strings(expected)
 	sort.Strings(allDBs)
-	if d := diff.TextSlices(expected, allDBs); d != nil {
+	if d := testy.DiffTextSlices(expected, allDBs); d != nil {
 		ctx.Errorf("AllDBs() returned unexpected list:\n%s\n", d)
 	}
 }

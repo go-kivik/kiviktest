@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -104,7 +104,7 @@ func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string) {
 		}
 	}
 	expected.DBName = dbName
-	if d := diff.AsJSON(expected, plan); d != nil {
+	if d := testy.DiffAsJSON(expected, plan); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
 }

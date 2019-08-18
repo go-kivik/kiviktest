@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -207,7 +207,7 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) {
 					"the_age": 32,
 					"_rev":    result["_rev"],
 				}
-				if d := diff.AsJSON(expected, result); d != nil {
+				if d := testy.DiffAsJSON(expected, result); d != nil {
 					ctx.Errorf("Retrieved document differs:\n%s\n", d)
 				}
 			})

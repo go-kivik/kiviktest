@@ -26,8 +26,8 @@
 
 
 [[constraint]]
-  name = "github.com/flimzy/diff"
-  version = "0.1.2"
+  name = "gitlab.com/flimzy/testy"
+  branch = "master"
 
 [[constraint]]
   branch = "master"
