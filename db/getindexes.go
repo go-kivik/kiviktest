@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -84,7 +84,7 @@ func testGetIndexes(ctx *kt.Context, client *kivik.Client, dbname string, expect
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	if d := diff.AsJSON(expected, indexes); d != nil {
+	if d := testy.DiffAsJSON(expected, indexes); d != nil {
 		ctx.Errorf("Indexes differ from expectation:\n%s\n", d)
 	}
 }

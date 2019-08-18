@@ -4,8 +4,8 @@ import (
 	"context"
 	"sort"
 
-	"github.com/flimzy/diff"
 	"github.com/pkg/errors"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -120,7 +120,7 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
 	sort.Strings(docIDs) // normalize order
-	if d := diff.TextSlices(expected, docIDs); d != nil {
+	if d := testy.DiffTextSlices(expected, docIDs); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
 	if rows.Offset() != expOffset {

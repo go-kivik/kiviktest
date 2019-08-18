@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/flimzy/diff"
+	"gitlab.com/flimzy/testy"
 
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kiviktest/kt"
@@ -55,7 +55,7 @@ func testGetReplications(ctx *kt.Context, client *kivik.Client, expected interfa
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
-	if d := diff.AsJSON(expected, reps); d != nil {
+	if d := testy.DiffAsJSON(expected, reps); d != nil {
 		ctx.Errorf("GetReplications results differ:\n%s\n", d)
 	}
 }
