@@ -10,16 +10,9 @@ matrix:
     fast_finish: true
     allow_failures:
         - go: master
-
-addons:
-  apt:
-    sources:
-      - sourceline: 'ppa:masterminds/glide'
-    packages:
-      - glide
-
 install:
-    - glide install
+    - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+    - dep ensure && dep status
 
 script:
     - ./travis/test.sh
