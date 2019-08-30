@@ -174,14 +174,14 @@ func cleanupDatabases(ctx context.Context, client *kivik.Client, verbose bool) (
 	}
 	replicator := client.DB(context.Background(), "_replicator")
 	if e := replicator.Err(); e != nil {
-		if kivik.StatusCode(e) != kivik.StatusNotFound && kivik.StatusCode(e) != kivik.StatusNotImplemented {
+		if kivik.StatusCode(e) != http.StatusNotFound && kivik.StatusCode(e) != http.StatusNotImplemented {
 			return count, e
 		}
 		return count, nil
 	}
 	docs, err := replicator.AllDocs(context.Background(), map[string]interface{}{"include_docs": true})
 	if err != nil {
-		if kivik.StatusCode(err) == kivik.StatusNotImplemented || kivik.StatusCode(err) == kivik.StatusNotFound {
+		if kivik.StatusCode(err) == http.StatusNotImplemented || kivik.StatusCode(err) == http.StatusNotFound {
 			return count, nil
 		}
 		return count, err
@@ -210,7 +210,7 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	db := client.DB(ctx, "_users")
 	if err := db.Err(); err != nil {
 		switch kivik.StatusCode(err) {
-		case kivik.StatusNotFound, kivik.StatusNotImplemented:
+		case http.StatusNotFound, http.StatusNotImplemented:
 			return 0, nil
 		}
 		return 0, err
@@ -218,7 +218,7 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	users, err := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
 	if err != nil {
 		switch kivik.StatusCode(err) {
-		case kivik.StatusNotFound, kivik.StatusNotImplemented:
+		case http.StatusNotFound, http.StatusNotImplemented:
 			return 0, nil
 		}
 		return 0, err
@@ -251,7 +251,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 	db := client.DB(ctx, "_replicator")
 	if err := db.Err(); err != nil {
 		switch kivik.StatusCode(err) {
-		case kivik.StatusNotFound, kivik.StatusNotImplemented:
+		case http.StatusNotFound, http.StatusNotImplemented:
 			return 0, nil
 		}
 		return 0, err
@@ -259,7 +259,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 	reps, err := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
 	if err != nil {
 		switch kivik.StatusCode(err) {
-		case kivik.StatusNotFound, kivik.StatusNotImplemented:
+		case http.StatusNotFound, http.StatusNotImplemented:
 			return 0, nil
 		}
 		return 0, err

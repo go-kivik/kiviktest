@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"time"
 
@@ -106,7 +107,7 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 				default:
 				}
 				if err := rep.Update(cx); err != nil {
-					if kivik.StatusCode(err) == kivik.StatusNotFound {
+					if kivik.StatusCode(err) == http.StatusNotFound {
 						// NotFound expected after the replication is cancelled
 						break
 					}
@@ -158,7 +159,7 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 	}
 	ctx.Run("Results", func(ctx *kt.Context) {
 		err := rep.Err()
-		if kivik.StatusCode(err) == kivik.StatusRequestTimeout {
+		if kivik.StatusCode(err) == http.StatusRequestTimeout {
 			success = false // Allow retrying
 			return
 		}

@@ -53,7 +53,7 @@ func testSession(ctx *kt.Context, client *chttp.Client) {
 			Roles []string `json:"roles"`
 		} `json:"userCtx"`
 	}{}
-	_, err := client.DoJSON(context.Background(), kivik.MethodGet, "/_session", nil, &uCtx)
+	_, err := client.DoJSON(context.Background(), http.MethodGet, "/_session", nil, &uCtx)
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}
@@ -184,7 +184,7 @@ func testCreateSession(ctx *kt.Context, client *chttp.Client) {
 				if test.Query != "" {
 					reqURL += "?" + test.Query
 				}
-				r, err := client.DoReq(context.Background(), kivik.MethodPost, reqURL, test.Options)
+				r, err := client.DoReq(context.Background(), http.MethodPost, reqURL, test.Options)
 				if err == nil {
 					err = chttp.ResponseError(r)
 				}
@@ -201,7 +201,7 @@ func testCreateSession(ctx *kt.Context, client *chttp.Client) {
 					}
 				}
 				if strings.HasPrefix(test.Query, "next=") {
-					if r.StatusCode != kivik.StatusFound {
+					if r.StatusCode != http.StatusFound {
 						ctx.Errorf("Expected redirect")
 					} else {
 						q, _ := url.ParseQuery(test.Query)
@@ -275,7 +275,7 @@ func testDeleteSession(ctx *kt.Context, client *chttp.Client) {
 		if dsn, _ := url.Parse(ctx.Admin.DSN()); dsn.User != nil {
 			name := dsn.User.Username()
 			password, _ := dsn.User.Password()
-			r, err := client.DoReq(context.Background(), kivik.MethodPost, "/_session", &chttp.Options{
+			r, err := client.DoReq(context.Background(), http.MethodPost, "/_session", &chttp.Options{
 				Body: kt.Body(`{"name":"%s","password":"%s"}`, name, password),
 			})
 			if err != nil {
@@ -306,7 +306,7 @@ func testDeleteSession(ctx *kt.Context, client *chttp.Client) {
 				response := struct {
 					OK bool `json:"ok"`
 				}{}
-				req, err := client.NewRequest(context.Background(), kivik.MethodDelete, "/_session", nil)
+				req, err := client.NewRequest(context.Background(), http.MethodDelete, "/_session", nil)
 				if err != nil {
 					ctx.Fatalf("Failed to create request: %s", err)
 				}
