@@ -31,10 +31,6 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/go-kivik/couchdb"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/go-kivik/kivik"
 
 [[constraint]]

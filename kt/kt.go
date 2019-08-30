@@ -13,7 +13,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-kivik/couchdb/chttp"
 	"github.com/go-kivik/kivik"
 )
 
@@ -23,12 +22,8 @@ type Context struct {
 	RW bool
 	// Admin is a client connection with database admin privileges.
 	Admin *kivik.Client
-	// CHTTPAdmin is a chttp connection with admin privileges.
-	CHTTPAdmin *chttp.Client
 	// NoAuth isa client connection with no authentication.
 	NoAuth *kivik.Client
-	// CHTTPNoAuth is a chttp connection with no authentication.
-	CHTTPNoAuth *chttp.Client
 	// Config is the suite config
 	Config SuiteConfig
 	// T is the *testing.T value
@@ -38,13 +33,11 @@ type Context struct {
 // Child returns a shallow copy of itself with a new t.
 func (c *Context) Child(t *testing.T) *Context {
 	return &Context{
-		RW:          c.RW,
-		Admin:       c.Admin,
-		CHTTPAdmin:  c.CHTTPAdmin,
-		NoAuth:      c.NoAuth,
-		CHTTPNoAuth: c.CHTTPNoAuth,
-		Config:      c.Config,
-		T:           t,
+		RW:     c.RW,
+		Admin:  c.Admin,
+		NoAuth: c.NoAuth,
+		Config: c.Config,
+		T:      t,
 	}
 }
 

@@ -12,7 +12,6 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/go-kivik/couchdb/chttp"
 	"github.com/go-kivik/kivik"
 	"github.com/go-kivik/kivik/errors"
 	"github.com/go-kivik/kiviktest/kt"
@@ -412,20 +411,10 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 	} else {
 		return nil, err
 	}
-	if chttpClient, err := chttp.New(dsn); err == nil {
-		clients.CHTTPAdmin = chttpClient
-	} else {
-		return nil, err
-	}
 
 	t.Logf("Connecting to %s ...\n", noAuthDSN)
 	if client, err := kivik.New(driverName, noAuthDSN); err == nil {
 		clients.NoAuth = client
-	} else {
-		return nil, err
-	}
-	if chttpClient, err := chttp.New(noAuthDSN); err == nil {
-		clients.CHTTPNoAuth = chttpClient
 	} else {
 		return nil, err
 	}
