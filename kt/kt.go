@@ -167,7 +167,6 @@ var tests = make(map[string]testFunc)
 // be true if the test writes to the database.
 func Register(name string, fn testFunc) {
 	tests[name] = fn
-	return
 }
 
 // RunSubtests executes the requested suites of tests against the client.
