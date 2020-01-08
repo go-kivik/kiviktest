@@ -55,7 +55,7 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			att := &kivik.Attachment{
 				Filename:    "test.txt",
 				ContentType: "text/plain",
-				Content:     stringReadCloser("test content"),
+				Content:     stringReadCloser(),
 			}
 			_, err = db.PutAttachment(context.Background(), docID, rev, att)
 			return err
@@ -69,7 +69,7 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			att := &kivik.Attachment{
 				Filename:    "test.txt",
 				ContentType: "text/plain",
-				Content:     stringReadCloser("test content"),
+				Content:     stringReadCloser(),
 			}
 			_, err := db.PutAttachment(context.Background(), docID, "", att)
 			return err
@@ -91,7 +91,7 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			att := &kivik.Attachment{
 				Filename:    "test.txt",
 				ContentType: "text/plain",
-				Content:     stringReadCloser("test content"),
+				Content:     stringReadCloser(),
 			}
 			_, err := db.PutAttachment(context.Background(), docID, "5-20bd3c7d7d6b81390c6679d8bae8795b", att)
 			return err
@@ -117,7 +117,7 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			att := &kivik.Attachment{
 				Filename:    "test.txt",
 				ContentType: "text/plain",
-				Content:     stringReadCloser("test content"),
+				Content:     stringReadCloser(),
 			}
 			_, err = db.PutAttachment(context.Background(), docID, rev, att)
 			return err
@@ -131,7 +131,7 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 			att := &kivik.Attachment{
 				Filename:    "test.txt",
 				ContentType: "text/plain",
-				Content:     stringReadCloser("test content"),
+				Content:     stringReadCloser(),
 			}
 			_, err := db.PutAttachment(context.Background(), docID, "", att)
 			return err
@@ -140,6 +140,6 @@ func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
 	})
 }
 
-func stringReadCloser(str string) io.ReadCloser {
-	return ioutil.NopCloser(strings.NewReader(str))
+func stringReadCloser() io.ReadCloser {
+	return ioutil.NopCloser(strings.NewReader("test content"))
 }

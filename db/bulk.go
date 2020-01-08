@@ -24,7 +24,7 @@ func bulkDocs(ctx *kt.Context) {
 	})
 }
 
-func testBulkDocs(ctx *kt.Context, client *kivik.Client) {
+func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
