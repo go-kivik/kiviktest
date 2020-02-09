@@ -12,13 +12,13 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/go-kivik/kivik"
-	"github.com/go-kivik/kivik/errors"
-	"github.com/go-kivik/kiviktest/kt"
+	kivik "github.com/go-kivik/kivik/v3"
+	"github.com/go-kivik/kivik/v3/errors"
+	"github.com/go-kivik/kiviktest/v3/kt"
 
 	// Tests
-	_ "github.com/go-kivik/kiviktest/client"
-	_ "github.com/go-kivik/kiviktest/db"
+	_ "github.com/go-kivik/kiviktest/v3/client"
+	_ "github.com/go-kivik/kiviktest/v3/db"
 )
 
 // The available test suites
