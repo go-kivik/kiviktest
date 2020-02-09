@@ -1,4 +1,4 @@
-module github.com/go-kivik/kiviktest
+module github.com/go-kivik/kiviktest/v3
 
 go 1.13
 
