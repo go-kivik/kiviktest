@@ -3,8 +3,8 @@
 package client
 
 import (
-	"github.com/go-kivik/kivik"
-	"github.com/go-kivik/kiviktest/kt"
+	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
 func replicationOptions(_ *kt.Context, _ *kivik.Client, _, _, _ string, in map[string]interface{}) map[string]interface{} {
