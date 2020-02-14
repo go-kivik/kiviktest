@@ -1,19 +1,8 @@
 stages:
-    - vendor
     - test
 
 variables:
     GO111MODULE: "on"
-
-vendor:
-    stage: vendor
-    image: golang:1.13
-    script:
-        - go mod vendor
-    artifacts:
-        paths:
-            - vendor
-        expire_in: 1 hour
 
 .test: &test_template
     stage: test
