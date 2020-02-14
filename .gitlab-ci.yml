@@ -1,9 +1,20 @@
 stages:
+    - vendor
     - test
 
 variables:
     SRCDIR: /go/src/github.com/go-kivik/kiviktest
     GO111MODULE: "on"
+
+vendor:
+    stage: vendor
+    image: golang:1.13
+    script:
+        - go mod vendor
+    artifacts:
+        paths:
+            - vendor
+        expire_in: 1 hour
 
 .test: &test_template
     stage: test
@@ -37,10 +48,12 @@ lint:
 go-1.9:
     <<: *nomod_template
     image: golang:1.9
+    needs: ["vendor"]
 
 go-1.10:
     <<: *nomod_template
     image: golang:1.10
+    needs: ["vendor"]
 
 go-1.11:
     <<: *test_template
