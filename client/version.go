@@ -4,8 +4,8 @@ import (
 	"context"
 	"regexp"
 
-	"github.com/go-kivik/kivik"
-	"github.com/go-kivik/kiviktest/kt"
+	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
 func init() {

@@ -2,7 +2,6 @@ stages:
     - test
 
 variables:
-    SRCDIR: /go/src/github.com/go-kivik/kiviktest
     GO111MODULE: "on"
 
 .test: &test_template
@@ -33,14 +32,6 @@ lint:
         - go mod download
         - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.22.2
         - golangci-lint run ./...
-
-go-1.9:
-    <<: *nomod_template
-    image: golang:1.9
-
-go-1.10:
-    <<: *nomod_template
-    image: golang:1.10
 
 go-1.11:
     <<: *test_template
