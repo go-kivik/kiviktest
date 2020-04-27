@@ -134,7 +134,7 @@ func testPut(ctx *kt.Context, client *kivik.Client) {
 				"name": "Bob",
 			}
 			err := kt.Retry(func() error {
-				_, err := db.Put(context.Background(), doc["_id"].(string), doc)
+				_, err := ctx.Admin.DB(context.Background(), dbName).Put(context.Background(), doc["_id"].(string), doc)
 				return err
 			})
 			if err != nil {

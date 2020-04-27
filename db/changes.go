@@ -67,7 +67,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 		ID:    ctx.TestDBName(),
 		Value: "foo",
 	}
-	rev, err := db.Put(context.Background(), doc.ID, doc)
+	rev, err := ctx.Admin.DB(context.Background(), dbname).Put(context.Background(), doc.ID, doc)
 	if err != nil {
 		ctx.Fatalf("Failed to create doc: %s", err)
 	}
@@ -138,6 +138,7 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
 	}
+	adb := ctx.Admin.DB(context.Background(), dbname)
 	expected := make([]string, 0, 3)
 
 	// Doc: foo
@@ -145,7 +146,7 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 		ID:    ctx.TestDBName(),
 		Value: "foo",
 	}
-	rev, err := db.Put(context.Background(), doc.ID, doc)
+	rev, err := adb.Put(context.Background(), doc.ID, doc)
 	if err != nil {
 		ctx.Fatalf("Failed to create doc: %s", err)
 	}
@@ -156,13 +157,13 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 		ID:    ctx.TestDBName(),
 		Value: "bar",
 	}
-	rev, err = db.Put(context.Background(), doc.ID, doc)
+	rev, err = adb.Put(context.Background(), doc.ID, doc)
 	if err != nil {
 		ctx.Fatalf("Failed to create doc: %s", err)
 	}
 	doc.Rev = rev
 	doc.Value = "baz"
-	rev, err = db.Put(context.Background(), doc.ID, doc)
+	rev, err = adb.Put(context.Background(), doc.ID, doc)
 	if err != nil {
 		ctx.Fatalf("Failed to update doc: %s", err)
 	}
@@ -173,12 +174,12 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 		ID:    ctx.TestDBName(),
 		Value: "bar",
 	}
-	rev, err = db.Put(context.Background(), doc.ID, doc)
+	rev, err = adb.Put(context.Background(), doc.ID, doc)
 	if err != nil {
 		ctx.Fatalf("Failed to create doc: %s", err)
 	}
 	doc.Rev = rev
-	rev, err = db.Delete(context.Background(), doc.ID, doc.Rev)
+	rev, err = adb.Delete(context.Background(), doc.ID, doc.Rev)
 	if err != nil {
 		ctx.Fatalf("Failed to delete doc: %s", err)
 	}

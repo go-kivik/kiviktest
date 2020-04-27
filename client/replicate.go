@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -177,11 +178,13 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 				ctx.Errorf("Expected a replication ID")
 			}
 		}
-		if rep.Source != dbsource && rep.Source != dbsource+"/" {
-			ctx.Errorf("Unexpected source. Expected: %s, Actual: %s\n", dbsource, rep.Source)
+		source := stripCreds(dbsource)
+		target := stripCreds(dbtarget)
+		if rep.Source != source && rep.Source != source+"/" {
+			ctx.Errorf("Unexpected source. Expected: %s, Actual: %s\n", source, rep.Source)
 		}
-		if rep.Target != dbtarget && rep.Target != dbtarget+"/" {
-			ctx.Errorf("Unexpected target. Expected: %s, Actual: %s\n", dbtarget, rep.Target)
+		if rep.Target != target && rep.Target != target+"/" {
+			ctx.Errorf("Unexpected target. Expected: %s, Actual: %s\n", target, rep.Target)
 		}
 		if rep.State() != kivik.ReplicationComplete {
 			ctx.Errorf("Replication failed to complete. Final state: %s\n", rep.State())
@@ -191,4 +194,10 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 		}
 	})
 	return success
+}
+
+func stripCreds(addr string) string {
+	url, _ := url.Parse(addr)
+	url.User = nil
+	return url.String()
 }
