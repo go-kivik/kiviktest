@@ -252,6 +252,7 @@ func (c *Context) RunRO(fn testFunc) {
 
 // Errorf is a wrapper around t.Errorf()
 func (c *Context) Errorf(format string, args ...interface{}) {
+	c.T.Helper()
 	c.T.Errorf(format, args...)
 }
 
