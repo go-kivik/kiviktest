@@ -105,6 +105,6 @@ func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string) {
 	}
 	expected.DBName = dbName
 	if d := testy.DiffAsJSON(expected, plan); d != nil {
-		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
+		ctx.Errorf("Unexpected plan returned:\n%s\n", d)
 	}
 }
