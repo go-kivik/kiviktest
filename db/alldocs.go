@@ -25,6 +25,48 @@ func allDocs(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		testAllDocsRW(ctx)
 	})
+	testMultiQueries(ctx)
+}
+
+func testMultiQueries(ctx *kt.Context) {
+	ctx.Run("MultipleQueries", func(ctx *kt.Context) {
+		client := ctx.Admin
+		expected := []string{"foo"}
+		expOffset := int64(0)
+		ctx.Parallel()
+		options := kivik.Options{
+			"queries": []interface{}{
+				map[string]interface{}{
+					"keys": []string{"foo", "bar"},
+				},
+				map[string]interface{}{
+					"sorted": false,
+				},
+			},
+		}
+		db := client.DB(context.Background(), "_users", options)
+		// Errors may be deferred here, so only return if we actually get
+		// an error.
+		if err := db.Err(); err != nil && !ctx.IsExpectedSuccess(err) {
+			return
+		}
+
+		rows, err := db.AllDocs(context.Background())
+		if !ctx.IsExpectedSuccess(err) {
+			return
+		}
+		docIDs := make([]string, 0, len(expected))
+		for rows.Next() {
+			docIDs = append(docIDs, rows.ID())
+		}
+		if rows.Err() != nil {
+			ctx.Fatalf("Failed to fetch row: %s", rows.Err())
+		}
+		testExpectedDocs(ctx, expected, docIDs, false)
+		if expOffset != rows.Offset() {
+			ctx.Errorf("offset: Expected %d, got %d", expOffset, rows.Offset())
+		}
+	})
 }
 
 func testAllDocsRW(ctx *kt.Context) {
