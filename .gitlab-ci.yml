@@ -31,6 +31,7 @@ lint:
     script:
         - go mod download
         - golangci-lint run ./...
+        - ./script/check-license.sh
 
 go-1.11:
     <<: *test_template
