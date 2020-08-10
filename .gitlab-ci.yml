@@ -24,13 +24,12 @@ variables:
 
 lint:
     stage: test
-    image: golang:1.14
+    image: golangci/golangci-lint:v1.30
     services: []
     before_script:
         - ''
     script:
         - go mod download
-        - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.23.7
         - golangci-lint run ./...
 
 go-1.11:
