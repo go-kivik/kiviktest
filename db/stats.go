@@ -16,7 +16,7 @@ import (
 	"context"
 	"fmt"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -49,7 +49,7 @@ func stats(ctx *kt.Context) {
 func rwTests(ctx *kt.Context, client *kivik.Client) {
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	db := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	db := ctx.Admin.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db: %s", err)
 	}
@@ -80,7 +80,7 @@ func roTests(ctx *kt.Context, client *kivik.Client) {
 }
 
 func testDBInfo(ctx *kt.Context, client *kivik.Client, dbname string, docCount int64) {
-	stats, err := client.DB(context.Background(), dbname, ctx.Options("db")).Stats(context.Background())
+	stats, err := client.DB(dbname, ctx.Options("db")).Stats(context.Background())
 	if !ctx.IsExpectedSuccess(err) {
 		return
 	}

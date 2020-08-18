@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -39,14 +39,14 @@ func delindex(ctx *kt.Context) {
 func testDelIndex(ctx *kt.Context, client *kivik.Client) {
 	dbname := ctx.TestDB()
 	defer ctx.Admin.DestroyDB(context.Background(), dbname, ctx.Options("db")) // nolint: errcheck
-	dba := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	dba := ctx.Admin.DB(dbname, ctx.Options("db"))
 	if err := dba.Err(); err != nil {
 		ctx.Fatalf("Failed to open db as admin: %s", err)
 	}
 	if err := dba.CreateIndex(context.Background(), "foo", "bar", `{"fields":["foo"]}`); err != nil {
 		ctx.Fatalf("Failed to create index: %s", err)
 	}
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}

@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -27,7 +27,7 @@ func copy(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
-		db := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+		db := ctx.Admin.DB(dbname, ctx.Options("db"))
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
@@ -80,7 +80,7 @@ func copy(ctx *kt.Context) {
 func copyTest(ctx *kt.Context, client *kivik.Client, dbname string, source map[string]string) {
 	ctx.Run(source["_id"], func(ctx *kt.Context) {
 		ctx.Parallel()
-		db := client.DB(context.Background(), dbname, ctx.Options("db"))
+		db := client.DB(dbname, ctx.Options("db"))
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}

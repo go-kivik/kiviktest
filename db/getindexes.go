@@ -17,7 +17,7 @@ import (
 
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -61,7 +61,7 @@ func roGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	dba := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	dba := ctx.Admin.DB(dbname, ctx.Options("db"))
 	if err := dba.Err(); err != nil {
 		ctx.Fatalf("Failed to open db as admin: %s", err)
 	}
@@ -88,7 +88,7 @@ func rwGetIndexesTests(ctx *kt.Context, client *kivik.Client) {
 }
 
 func testGetIndexes(ctx *kt.Context, client *kivik.Client, dbname string, expected interface{}) {
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
