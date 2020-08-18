@@ -17,7 +17,7 @@ import (
 
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -61,7 +61,7 @@ func security(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
-		db := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+		db := ctx.Admin.DB(dbname, ctx.Options("db"))
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
@@ -110,7 +110,7 @@ func testSetSecurityTests(ctx *kt.Context, client *kivik.Client) {
 }
 
 func testSetSecurity(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
@@ -122,7 +122,7 @@ func testSetSecurity(ctx *kt.Context, client *kivik.Client, dbname string) {
 
 func testGetSecurity(ctx *kt.Context, client *kivik.Client, dbname string, expected *kivik.Security) {
 	sec, err := func() (*kivik.Security, error) {
-		db := client.DB(context.Background(), dbname, ctx.Options("db"))
+		db := client.DB(dbname, ctx.Options("db"))
 		if err := db.Err(); err != nil {
 			return nil, err
 		}

@@ -19,7 +19,7 @@ import (
 
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -66,7 +66,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
 	}
@@ -79,7 +79,7 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 		ID:    ctx.TestDBName(),
 		Value: "foo",
 	}
-	rev, err := ctx.Admin.DB(context.Background(), dbname).Put(context.Background(), doc.ID, doc)
+	rev, err := ctx.Admin.DB(dbname).Put(context.Background(), doc.ID, doc)
 	if err != nil {
 		ctx.Fatalf("Failed to create doc: %s", err)
 	}
@@ -146,11 +146,11 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
 	}
-	adb := ctx.Admin.DB(context.Background(), dbname)
+	adb := ctx.Admin.DB(dbname)
 	expected := make([]string, 0, 3)
 
 	// Doc: foo

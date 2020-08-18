@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -36,7 +36,7 @@ func flushTest(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	for _, dbName := range ctx.MustStringSlice("databases") {
 		ctx.Run(dbName, func(ctx *kt.Context) {
-			db := client.DB(context.Background(), dbName, ctx.Options("db"))
+			db := client.DB(dbName, ctx.Options("db"))
 			if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 				return
 			}

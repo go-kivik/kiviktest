@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -47,7 +47,7 @@ func delAttachment(ctx *kt.Context) {
 }
 
 func testDeleteAttachmentNoDoc(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db")
 	}
@@ -71,12 +71,12 @@ func testDeleteAttachmentsDDoc(ctx *kt.Context, client *kivik.Client, dbname, fi
 }
 
 func doDeleteAttachmentTest(ctx *kt.Context, client *kivik.Client, dbname, docID, filename string) {
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db")
 	}
 	ctx.Parallel()
-	adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	adb := ctx.Admin.DB(dbname, ctx.Options("db"))
 	if err := adb.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}

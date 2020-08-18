@@ -17,7 +17,7 @@ import (
 
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -40,11 +40,11 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 	ctx.Parallel()
 	dbname := ctx.TestDB()
 	defer ctx.DestroyDB(dbname)
-	adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	adb := ctx.Admin.DB(dbname, ctx.Options("db"))
 	if err := adb.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db as admin: %s", err)
 	}
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to connect to db: %s", err)
 	}
