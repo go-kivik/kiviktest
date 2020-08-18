@@ -24,7 +24,7 @@ import (
 	"sync/atomic"
 	"testing"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kivik/v4/errors"
 	"github.com/go-kivik/kiviktest/v4/kt"
 
@@ -186,7 +186,7 @@ func cleanupDatabases(ctx context.Context, client *kivik.Client, verbose bool) (
 			count++
 		}
 	}
-	replicator := client.DB(context.Background(), "_replicator")
+	replicator := client.DB("_replicator")
 	if e := replicator.Err(); e != nil {
 		if kivik.StatusCode(e) != http.StatusNotFound && kivik.StatusCode(e) != http.StatusNotImplemented {
 			return count, e
@@ -221,7 +221,7 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	if verbose {
 		fmt.Printf("Cleaning up stale users\n")
 	}
-	db := client.DB(ctx, "_users")
+	db := client.DB("_users")
 	if err := db.Err(); err != nil {
 		switch kivik.StatusCode(err) {
 		case http.StatusNotFound, http.StatusNotImplemented:
@@ -262,7 +262,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 	if verbose {
 		fmt.Printf("Cleaning up stale replications\n")
 	}
-	db := client.DB(ctx, "_replicator")
+	db := client.DB("_replicator")
 	if err := db.Err(); err != nil {
 		switch kivik.StatusCode(err) {
 		case http.StatusNotFound, http.StatusNotImplemented:

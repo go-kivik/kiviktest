@@ -17,7 +17,7 @@ import (
 
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -70,7 +70,7 @@ func testExplain(ctx *kt.Context, client *kivik.Client) {
 
 func doExplainTest(ctx *kt.Context, client *kivik.Client, dbName string) {
 	ctx.Parallel()
-	db := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(dbName, ctx.Options("db"))
 	// Errors may be deferred here, so only return if we actually get
 	// an error.
 	if err := db.Err(); err != nil && !ctx.IsExpectedSuccess(err) {

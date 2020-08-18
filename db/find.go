@@ -19,7 +19,7 @@ import (
 	"github.com/pkg/errors"
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -61,7 +61,7 @@ func testFindRW(ctx *kt.Context) {
 
 func setUpFindTest(ctx *kt.Context) (dbName string, docIDs []string, err error) {
 	dbName = ctx.TestDB()
-	db := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+	db := ctx.Admin.DB(dbName, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		return dbName, nil, errors.Wrap(err, "failed to connect to db")
 	}
@@ -98,7 +98,7 @@ func testFind(ctx *kt.Context, client *kivik.Client) {
 
 func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset int64, expected []string) {
 	ctx.Parallel()
-	db := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(dbName, ctx.Options("db"))
 	// Errors may be deferred here, so only return if we actually get
 	// an error.
 	if err := db.Err(); err != nil && !ctx.IsExpectedSuccess(err) {

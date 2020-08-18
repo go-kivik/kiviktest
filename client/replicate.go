@@ -19,7 +19,7 @@ import (
 	"strings"
 	"time"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -57,7 +57,7 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 	defer ctx.DestroyDB(dbtarget)
 	defer ctx.DestroyDB(dbsource)
 
-	db := ctx.Admin.DB(context.Background(), dbsource)
+	db := ctx.Admin.DB(dbsource)
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}

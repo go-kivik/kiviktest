@@ -18,7 +18,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -44,11 +44,11 @@ func putAttachment(ctx *kt.Context) {
 }
 
 func testPutAttachment(ctx *kt.Context, client *kivik.Client, dbname string) {
-	db := client.DB(context.Background(), dbname, ctx.Options("db"))
+	db := client.DB(dbname, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
-	adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+	adb := ctx.Admin.DB(dbname, ctx.Options("db"))
 	if err := adb.Err(); err != nil {
 		ctx.Fatalf("Failed to open admin db: %s", err)
 	}

@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -44,11 +44,11 @@ func testDelete(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbName := ctx.TestDB()
 	defer ctx.DestroyDB(dbName)
-	admdb := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+	admdb := ctx.Admin.DB(dbName, ctx.Options("db"))
 	if err := admdb.Err(); err != nil {
 		ctx.Errorf("Failed to connect to db as admin: %s", err)
 	}
-	db := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(dbName, ctx.Options("db"))
 	if err := db.Err(); err != nil {
 		ctx.Errorf("Failed to connect to db: %s", err)
 		return

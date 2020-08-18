@@ -17,7 +17,7 @@ import (
 
 	"gitlab.com/flimzy/testy"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -36,7 +36,7 @@ func get(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
 		defer ctx.DestroyDB(dbName)
-		db := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+		db := ctx.Admin.DB(dbName, ctx.Options("db"))
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to connect to test db: %s", err)
 		}
@@ -75,7 +75,7 @@ func get(ctx *kt.Context) {
 		ctx.Run("group", func(ctx *kt.Context) {
 			ctx.RunAdmin(func(ctx *kt.Context) {
 				ctx.Parallel()
-				db := ctx.Admin.DB(context.Background(), dbName, ctx.Options("db"))
+				db := ctx.Admin.DB(dbName, ctx.Options("db"))
 				if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 					return
 				}
@@ -86,7 +86,7 @@ func get(ctx *kt.Context) {
 			})
 			ctx.RunNoAuth(func(ctx *kt.Context) {
 				ctx.Parallel()
-				db := ctx.NoAuth.DB(context.Background(), dbName, ctx.Options("db"))
+				db := ctx.NoAuth.DB(dbName, ctx.Options("db"))
 				if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 					return
 				}

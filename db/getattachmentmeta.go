@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -27,7 +27,7 @@ func getAttachmentMeta(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
-		adb := ctx.Admin.DB(context.Background(), dbname, ctx.Options("db"))
+		adb := ctx.Admin.DB(dbname, ctx.Options("db"))
 		if err := adb.Err(); err != nil {
 			ctx.Fatalf("Failed to open db: %s", err)
 		}
@@ -78,7 +78,7 @@ func getAttachmentMeta(ctx *kt.Context) {
 func testGetAttachmentMeta(ctx *kt.Context, client *kivik.Client, dbname, docID, filename string) {
 	ctx.Run(docID+"/"+filename, func(ctx *kt.Context) {
 		ctx.Parallel()
-		db := client.DB(context.Background(), dbname, ctx.Options("db"))
+		db := client.DB(dbname, ctx.Options("db"))
 		if err := db.Err(); err != nil {
 			ctx.Fatalf("Failed to connect to db")
 		}

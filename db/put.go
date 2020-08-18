@@ -15,7 +15,7 @@ package db
 import (
 	"context"
 
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 
@@ -38,7 +38,7 @@ func testPut(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
 	dbName := ctx.TestDB()
 	defer ctx.DestroyDB(dbName)
-	db := client.DB(context.Background(), dbName, ctx.Options("db"))
+	db := client.DB(dbName, ctx.Options("db"))
 	if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 		return
 	}
@@ -146,7 +146,7 @@ func testPut(ctx *kt.Context, client *kivik.Client) {
 				"name": "Bob",
 			}
 			err := kt.Retry(func() error {
-				_, err := ctx.Admin.DB(context.Background(), dbName).Put(context.Background(), doc["_id"].(string), doc)
+				_, err := ctx.Admin.DB(dbName).Put(context.Background(), doc["_id"].(string), doc)
 				return err
 			})
 			if err != nil {
