@@ -183,10 +183,10 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 		}
 		source := stripCreds(dbsource)
 		target := stripCreds(dbtarget)
-		if rep.Source != source && rep.Source != source+"/" {
+		if rep.Source != source {
 			ctx.Errorf("Unexpected source. Expected: %s, Actual: %s\n", source, rep.Source)
 		}
-		if rep.Target != target && rep.Target != target+"/" {
+		if rep.Target != target {
 			ctx.Errorf("Unexpected target. Expected: %s, Actual: %s\n", target, rep.Target)
 		}
 		if rep.State() != kivik.ReplicationComplete {
@@ -202,5 +202,6 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 func stripCreds(addr string) string {
 	url, _ := url.Parse(addr)
 	url.User = nil
-	return url.String()
+	url.Path = strings.TrimSuffix(url.Path, "/")
+	return url.String() + "/"
 }
