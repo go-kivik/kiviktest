@@ -4,7 +4,9 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strings"
+	"testing"
 	"time"
 
 	kivik "github.com/go-kivik/kivik/v3"
@@ -40,12 +42,15 @@ func testReplication(ctx *kt.Context, client *kivik.Client) {
 	case "none":
 		prefix = ""
 	}
-	dbtarget := prefix + ctx.TestDB()
-	dbsource := prefix + ctx.TestDB()
-	defer ctx.DestroyDB(dbtarget)
-	defer ctx.DestroyDB(dbsource)
+	targetDB, sourceDB := ctx.TestDB(), ctx.TestDB()
+	defer func() {
+		ctx.DestroyDB(targetDB)
+		ctx.DestroyDB(sourceDB)
+	}()
+	dbtarget := prefix + targetDB
+	dbsource := prefix + sourceDB
 
-	db := ctx.Admin.DB(context.Background(), dbsource)
+	db := ctx.Admin.DB(context.Background(), sourceDB)
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("Failed to open db: %s", err)
 	}
@@ -178,14 +183,8 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 				ctx.Errorf("Expected a replication ID")
 			}
 		}
-		source := stripCreds(dbsource)
-		target := stripCreds(dbtarget)
-		if rep.Source != source && rep.Source != source+"/" {
-			ctx.Errorf("Unexpected source. Expected: %s, Actual: %s\n", source, rep.Source)
-		}
-		if rep.Target != target && rep.Target != target+"/" {
-			ctx.Errorf("Unexpected target. Expected: %s, Actual: %s\n", target, rep.Target)
-		}
+		checkReplicationURL(ctx.T, "source", dbsource, rep.Source)
+		checkReplicationURL(ctx.T, "target", dbtarget, rep.Target)
 		if rep.State() != kivik.ReplicationComplete {
 			ctx.Errorf("Replication failed to complete. Final state: %s\n", rep.State())
 		}
@@ -196,8 +195,31 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 	return success
 }
 
-func stripCreds(addr string) string {
-	url, _ := url.Parse(addr)
-	url.User = nil
-	return url.String()
+func checkReplicationURL(t *testing.T, name, want, got string) {
+	wantURL, err := url.Parse(want)
+	if err != nil {
+		t.Fatal(err)
+	}
+	gotURL, err := url.Parse(got)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !replicationURLsEqual(wantURL, gotURL) {
+		t.Errorf("Unexpected %s URL. Want: %s, got %s", name, want, got)
+	}
+}
+
+func replicationURLsEqual(want, got *url.URL) bool {
+	if want.User != nil && got.User != nil {
+		wantUser := want.User.Username()
+		gotUser := got.User.Username()
+		if wantUser != "" && gotUser != "" && wantUser != gotUser {
+			return false
+		}
+	}
+	want.User = nil
+	got.User = nil
+	want.Path = filepath.Join(want.Path, "")
+	got.Path = filepath.Join(got.Path, "")
+	return want.String() == got.String()
 }
