@@ -19,6 +19,7 @@ type testDeps interface {
 	StopTestLog() error
 	WriteHeapProfile(io.Writer) error
 	WriteProfileTo(string, io.Writer, int) error
+	SetPanicOnExit0(bool)
 }
 
 type deps struct{}
@@ -33,6 +34,7 @@ func (d *deps) WriteProfileTo(_ string, _ io.Writer, _ int) error { return nil }
 func (d *deps) ImportPath() string                                { return "" }
 func (d *deps) StartTestLog(io.Writer)                            {}
 func (d *deps) StopTestLog() error                                { return nil }
+func (d *deps) SetPanicOnExit0(bool)                              {}
 
 func mainStart(tests []testing.InternalTest) {
 	m := testing.MainStart(&deps{}, tests, nil, nil)
