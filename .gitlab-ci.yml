@@ -36,7 +36,7 @@ vendor:
 
 lint:
     stage: test
-    image: golangci/golangci-lint:v1.30
+    image: golangci/golangci-lint:v1.39
     services: []
     before_script:
         - ''
