@@ -10,12 +10,13 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+//go:build !js
 // +build !js
 
 package client
 
 import (
-	kivik "github.com/go-kivik/kivik/v4"
+	"github.com/go-kivik/kivik/v4"
 	"github.com/go-kivik/kiviktest/v4/kt"
 )
 

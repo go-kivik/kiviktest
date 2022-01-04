@@ -10,6 +10,7 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
+//go:build go1.8
 // +build go1.8
 
 package kt
