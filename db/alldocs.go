@@ -114,8 +114,8 @@ func doTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string, exp
 		return
 	}
 
-	rows, err := db.AllDocs(context.Background())
-	if !ctx.IsExpectedSuccess(err) {
+	rows := db.AllDocs(context.Background())
+	if !ctx.IsExpectedSuccess(rows.Err()) {
 		return
 	}
 	docIDs := make([]string, 0, len(expected))
@@ -149,8 +149,8 @@ func doTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, expOff
 		"update_seq":   true,
 	}
 
-	rows, err := db.AllDocs(context.Background(), opts)
-	if !ctx.IsExpectedSuccess(err) {
+	rows := db.AllDocs(context.Background(), opts)
+	if !ctx.IsExpectedSuccess(rows.Err()) {
 		return
 	}
 	docIDs := make([]string, 0, len(expected))

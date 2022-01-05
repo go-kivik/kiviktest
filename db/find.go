@@ -107,9 +107,8 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 
 	var rows *kivik.Rows
 	err := kt.Retry(func() error {
-		var e error
-		rows, e = db.Find(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
-		return e
+		rows = db.Find(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
+		return rows.Err()
 	})
 
 	if !ctx.IsExpectedSuccess(err) {
@@ -138,8 +137,8 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		ctx.Errorf("Unexpected offset: %v", rows.Offset())
 	}
 	ctx.Run("Warning", func(ctx *kt.Context) {
-		rows, err := db.Find(context.Background(), `{"selector":{"foo":{"$gt":null}}}`)
-		if !ctx.IsExpectedSuccess(err) {
+		rows := db.Find(context.Background(), `{"selector":{"foo":{"$gt":null}}}`)
+		if !ctx.IsExpectedSuccess(rows.Err()) {
 			return
 		}
 		for rows.Next() {

@@ -196,8 +196,8 @@ func cleanupDatabases(ctx context.Context, client *kivik.Client, verbose bool) (
 		}
 		return count, nil
 	}
-	docs, err := replicator.AllDocs(context.Background(), map[string]interface{}{"include_docs": true})
-	if err != nil {
+	docs := replicator.AllDocs(context.Background(), map[string]interface{}{"include_docs": true})
+	if err := docs.Err(); err != nil {
 		if kivik.StatusCode(err) == http.StatusNotImplemented || kivik.StatusCode(err) == http.StatusNotFound {
 			return count, nil
 		}
@@ -232,8 +232,8 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 		}
 		return 0, err
 	}
-	users, err := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
-	if err != nil {
+	users := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
+	if err := users.Err(); err != nil {
 		switch kivik.StatusCode(err) {
 		case http.StatusNotFound, http.StatusNotImplemented:
 			return 0, nil
@@ -249,10 +249,10 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 			var doc struct {
 				Rev string `json:"_rev"`
 			}
-			if err = users.ScanDoc(&doc); err != nil {
+			if err := users.ScanDoc(&doc); err != nil {
 				return count, err
 			}
-			if _, err = db.Delete(ctx, users.ID(), doc.Rev); err != nil {
+			if _, err := db.Delete(ctx, users.ID(), doc.Rev); err != nil {
 				return count, err
 			}
 			count++
@@ -273,8 +273,8 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 		}
 		return 0, err
 	}
-	reps, err := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
-	if err != nil {
+	reps := db.AllDocs(ctx, map[string]interface{}{"include_docs": true})
+	if err := reps.Err(); err != nil {
 		switch kivik.StatusCode(err) {
 		case http.StatusNotFound, http.StatusNotImplemented:
 			return 0, nil
@@ -288,7 +288,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 			Source string `json:"source"`
 			Target string `json:"target"`
 		}
-		if err = reps.ScanDoc(&doc); err != nil {
+		if err := reps.ScanDoc(&doc); err != nil {
 			return count, err
 		}
 		if strings.HasPrefix(reps.ID(), "kivik$") ||
@@ -297,7 +297,7 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 			if verbose {
 				fmt.Printf("\t--- Deleting replication %s\n", reps.ID())
 			}
-			if _, err = db.Delete(ctx, reps.ID(), doc.Rev); err != nil {
+			if _, err := db.Delete(ctx, reps.ID(), doc.Rev); err != nil {
 				return count, err
 			}
 			count++
