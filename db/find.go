@@ -105,7 +105,7 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		return
 	}
 
-	var rows *kivik.Rows
+	var rows kivik.Rows
 	err := kt.Retry(func() error {
 		rows = db.Find(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
 		return rows.Err()
