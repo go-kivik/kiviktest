@@ -105,7 +105,7 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		return
 	}
 
-	var rows kivik.Rows
+	var rows kivik.ResultSet
 	err := kt.Retry(func() error {
 		rows = db.Find(context.Background(), `{"selector":{"_id":{"$gt":null}}}`)
 		return rows.Err()
@@ -126,15 +126,16 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		}
 		docIDs = append(docIDs, doc.DocID)
 	}
-	if rows.Err() != nil {
+	meta, err := rows.Finish()
+	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
 	sort.Strings(docIDs) // normalize order
 	if d := testy.DiffTextSlices(expected, docIDs); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
-	if rows.Offset() != expOffset {
-		ctx.Errorf("Unexpected offset: %v", rows.Offset())
+	if meta.Offset != expOffset {
+		ctx.Errorf("Unexpected offset: %v", meta.Offset)
 	}
 	ctx.Run("Warning", func(ctx *kt.Context) {
 		rows := db.Find(context.Background(), `{"selector":{"foo":{"$gt":null}}}`)
@@ -143,8 +144,8 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		}
 		for rows.Next() {
 		}
-		if w := ctx.String("warning"); w != rows.Warning() {
-			ctx.Errorf("Warning:\nExpected: %s\n  Actual: %s", w, rows.Warning())
+		if w := ctx.String("warning"); w != meta.Warning {
+			ctx.Errorf("Warning:\nExpected: %s\n  Actual: %s", w, meta.Warning)
 		}
 	})
 }

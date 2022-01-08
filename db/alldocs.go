@@ -122,16 +122,17 @@ func doTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string, exp
 	for rows.Next() {
 		docIDs = append(docIDs, rows.ID())
 	}
-	if rows.Err() != nil {
+	meta, err := rows.Finish()
+	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
 	testExpectedDocs(ctx, expected, docIDs, exact)
-	if expOffset != rows.Offset() {
-		ctx.Errorf("offset: Expected %d, got %d", expOffset, rows.Offset())
+	if expOffset != meta.Offset {
+		ctx.Errorf("offset: Expected %d, got %d", expOffset, meta.Offset)
 	}
 	if exact {
-		if int64(len(expected)) != rows.TotalRows() {
-			ctx.Errorf("total rows: Expected %d, got %d", len(expected), rows.TotalRows())
+		if int64(len(expected)) != meta.TotalRows {
+			ctx.Errorf("total rows: Expected %d, got %d", len(expected), meta.TotalRows)
 		}
 	}
 }
@@ -176,21 +177,22 @@ func doTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, expOff
 		}
 		docIDs = append(docIDs, rows.ID())
 	}
-	if rows.Err() != nil {
+	meta, err := rows.Finish()
+	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
 	testExpectedDocs(ctx, expected, docIDs, exact)
-	if expOffset != rows.Offset() {
-		ctx.Errorf("offset: Expected %d, got %d", expOffset, rows.Offset())
+	if expOffset != meta.Offset {
+		ctx.Errorf("offset: Expected %d, got %d", expOffset, meta.Offset)
 	}
 	ctx.Run("UpdateSeq", func(ctx *kt.Context) {
-		if rows.UpdateSeq() == "" {
+		if meta.UpdateSeq == "" {
 			ctx.Errorf("Expected updated sequence")
 		}
 	})
 	if exact {
-		if int64(len(expected)) != rows.TotalRows() {
-			ctx.Errorf("total rows: Expected %d, got %d", len(expected), rows.TotalRows())
+		if int64(len(expected)) != meta.TotalRows {
+			ctx.Errorf("total rows: Expected %d, got %d", len(expected), meta.TotalRows)
 		}
 	}
 }
