@@ -135,17 +135,18 @@ func doQueryTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string
 			})
 		}
 	}
-	if rows.Err() != nil {
+	meta, err := rows.Finish()
+	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
 	if d := testy.DiffTextSlices(expected, docIDs); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
-	if expOffset != rows.Offset() {
-		ctx.Errorf("offset: Expected %d, got %d", expOffset, rows.Offset())
+	if expOffset != meta.Offset {
+		ctx.Errorf("offset: Expected %d, got %d", expOffset, meta.Offset)
 	}
-	if int64(len(expected)) != rows.TotalRows() {
-		ctx.Errorf("total rows: Expected %d, got %d", len(expected), rows.TotalRows())
+	if int64(len(expected)) != meta.TotalRows {
+		ctx.Errorf("total rows: Expected %d, got %d", len(expected), meta.TotalRows)
 	}
 }
 
@@ -188,21 +189,22 @@ func doQueryTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, e
 		}
 		docIDs = append(docIDs, rows.ID())
 	}
-	if rows.Err() != nil {
+	meta, err := rows.Finish()
+	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
 	if d := testy.DiffTextSlices(expected, docIDs); d != nil {
 		ctx.Errorf("Unexpected document IDs returned:\n%s\n", d)
 	}
-	if expOffset != rows.Offset() {
-		ctx.Errorf("offset: Expected %d, got %d", expOffset, rows.Offset())
+	if expOffset != meta.Offset {
+		ctx.Errorf("offset: Expected %d, got %d", expOffset, meta.Offset)
 	}
 	ctx.Run("UpdateSeq", func(ctx *kt.Context) {
-		if rows.UpdateSeq() == "" {
+		if meta.UpdateSeq == "" {
 			ctx.Errorf("Expected updated sequence")
 		}
 	})
-	if int64(len(expected)) != rows.TotalRows() {
-		ctx.Errorf("total rows: Expected %d, got %d", len(expected), rows.TotalRows())
+	if int64(len(expected)) != meta.TotalRows {
+		ctx.Errorf("total rows: Expected %d, got %d", len(expected), meta.TotalRows)
 	}
 }
