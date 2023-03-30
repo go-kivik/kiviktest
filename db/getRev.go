@@ -21,10 +21,10 @@ import (
 )
 
 func init() {
-	kt.Register("GetMeta", getMeta)
+	kt.Register("GetRev", getRev)
 }
 
-func getMeta(ctx *kt.Context) {
+func getRev(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbName := ctx.TestDB()
 		defer ctx.DestroyDB(dbName)
@@ -66,10 +66,10 @@ func getMeta(ctx *kt.Context) {
 				if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 					return
 				}
-				testGetMeta(ctx, db, doc)
-				testGetMeta(ctx, db, ddoc)
-				testGetMeta(ctx, db, local)
-				testGetMeta(ctx, db, &testDoc{ID: "bogus"})
+				testGetRev(ctx, db, doc)
+				testGetRev(ctx, db, ddoc)
+				testGetRev(ctx, db, local)
+				testGetRev(ctx, db, &testDoc{ID: "bogus"})
 			})
 			ctx.RunNoAuth(func(ctx *kt.Context) {
 				ctx.Parallel()
@@ -77,19 +77,19 @@ func getMeta(ctx *kt.Context) {
 				if err := db.Err(); !ctx.IsExpectedSuccess(err) {
 					return
 				}
-				testGetMeta(ctx, db, doc)
-				testGetMeta(ctx, db, ddoc)
-				testGetMeta(ctx, db, local)
-				testGetMeta(ctx, db, &testDoc{ID: "bogus"})
+				testGetRev(ctx, db, doc)
+				testGetRev(ctx, db, ddoc)
+				testGetRev(ctx, db, local)
+				testGetRev(ctx, db, &testDoc{ID: "bogus"})
 			})
 		})
 	})
 }
 
-func testGetMeta(ctx *kt.Context, db *kivik.DB, expectedDoc *testDoc) {
+func testGetRev(ctx *kt.Context, db *kivik.DB, expectedDoc *testDoc) {
 	ctx.Run(expectedDoc.ID, func(ctx *kt.Context) {
 		ctx.Parallel()
-		_, rev, err := db.GetMeta(context.Background(), expectedDoc.ID)
+		rev, err := db.GetRev(context.Background(), expectedDoc.ID)
 		if !ctx.IsExpectedSuccess(err) {
 			return
 		}
