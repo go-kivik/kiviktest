@@ -2,8 +2,8 @@ github.com/Masterminds/semver/v3 v3.1.1 h1:hLg3sBzpNErnxhQtUy/mmLR2I9foDujNK030I
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/go-kivik/kivik/v4 v4.0.0-20230330172814-e3cdef800184 h1:9U6qwAVOx7hWOZTwHzymuMtVTXB7Pas1E6kv7iZGhQ0=
-github.com/go-kivik/kivik/v4 v4.0.0-20230330172814-e3cdef800184/go.mod h1:WXlDuyGPIcNq7ejCME+bqYl7vzH/KpM9FLRPfsYEjZI=
+github.com/go-kivik/kivik/v4 v4.0.0-20230330195943-0fcd5e6f5451 h1:/1qglvlxyOdF4ZxZc4ko3/flXPbHghokhxZnhz5Wfpg=
+github.com/go-kivik/kivik/v4 v4.0.0-20230330195943-0fcd5e6f5451/go.mod h1:WXlDuyGPIcNq7ejCME+bqYl7vzH/KpM9FLRPfsYEjZI=
 github.com/gopherjs/gopherjs v0.0.0-20180825215210-0210a2f0f73c h1:16eHWuMGvCjSfgRJKqIzapE78onvvTbdi1rMkU00lZw=
 github.com/gopherjs/gopherjs v0.0.0-20180825215210-0210a2f0f73c/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/otiai10/copy v1.7.0 h1:hVoPiN+t+7d2nzzwMiDHPSOogsWAStewq3TwU05+clE=

@@ -25,7 +25,7 @@ func (c *Context) CheckError(err error) (match bool, success bool) {
 	if status == 0 && err == nil {
 		return true, true
 	}
-	switch actualStatus := kivik.StatusCode(err); actualStatus {
+	switch actualStatus := kivik.HTTPStatus(err); actualStatus {
 	case status:
 		// This is expected
 		return true, status == 0
@@ -34,7 +34,7 @@ func (c *Context) CheckError(err error) (match bool, success bool) {
 		return false, true
 	default:
 		if status == 0 {
-			c.Errorf("Unexpected failure: %d/%s", kivik.StatusCode(err), err)
+			c.Errorf("Unexpected failure: %d/%s", kivik.HTTPStatus(err), err)
 			return false, false
 		}
 		c.Errorf("Unexpected failure state.\nExpected: %d/%s\n  Actual: %d/%s", status, http.StatusText(status), actualStatus, err)
