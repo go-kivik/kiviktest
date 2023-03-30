@@ -10,8 +10,8 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-//go:build go1.10
-// +build go1.10
+//go:build go1.10 && !go1.18
+// +build go1.10,!go1.18
 
 package kiviktest
 
