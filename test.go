@@ -2,6 +2,7 @@ package kiviktest
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"net/http"
@@ -13,7 +14,6 @@ import (
 	"testing"
 
 	kivik "github.com/go-kivik/kivik/v3"
-	"github.com/go-kivik/kivik/v3/errors"
 	"github.com/go-kivik/kiviktest/v3/kt"
 
 	// Tests
