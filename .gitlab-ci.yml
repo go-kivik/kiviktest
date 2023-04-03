@@ -39,28 +39,10 @@ lint:
     image: golangci/golangci-lint:v1.39
     services: []
     before_script:
-        - ''
+        - ""
     script:
         - go mod download
         - golangci-lint run ./...
-
-go-1.9:
-    <<: *nomod_template
-    image: golang:1.9
-    needs: ["vendor"]
-
-go-1.10:
-    <<: *nomod_template
-    image: golang:1.10
-    needs: ["vendor"]
-
-go-1.11:
-    <<: *test_template
-    image: golang:1.11
-
-go-1.12:
-    <<: *test_template
-    image: golang:1.12
 
 go-1.13:
     <<: *test_template
