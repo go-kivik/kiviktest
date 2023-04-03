@@ -58,7 +58,7 @@ func (c *Context) Logf(format string, args ...interface{}) {
 	c.T.Logf(format, args...)
 }
 
-//Fatalf is a wrapper around t.Fatalf()
+// Fatalf is a wrapper around t.Fatalf()
 func (c *Context) Fatalf(format string, args ...interface{}) {
 	c.T.Fatalf(format, args...)
 }
