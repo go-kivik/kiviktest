@@ -1,6 +1,6 @@
 module github.com/go-kivik/kiviktest/v4
 
-go 1.13
+go 1.16
 
 require (
 	github.com/go-kivik/kivik/v4 v4.0.0-20230330195943-0fcd5e6f5451
