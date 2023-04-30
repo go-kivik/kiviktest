@@ -126,7 +126,7 @@ func doFindTest(ctx *kt.Context, client *kivik.Client, dbName string, expOffset 
 		}
 		docIDs = append(docIDs, doc.DocID)
 	}
-	meta, err := rows.Finish()
+	meta, err := rows.Metadata()
 	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
