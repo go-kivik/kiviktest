@@ -135,7 +135,7 @@ func doQueryTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string
 			})
 		}
 	}
-	meta, err := rows.Finish()
+	meta, err := rows.Metadata()
 	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
@@ -189,7 +189,7 @@ func doQueryTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, e
 		}
 		docIDs = append(docIDs, rows.ID())
 	}
-	meta, err := rows.Finish()
+	meta, err := rows.Metadata()
 	if err != nil {
 		ctx.Fatalf("Failed to fetch row: %s", rows.Err())
 	}
