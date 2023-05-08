@@ -207,11 +207,12 @@ func cleanupDatabases(ctx context.Context, client *kivik.Client, verbose bool) (
 		Rev string `json:"_rev"`
 	}
 	for docs.Next() {
-		if strings.HasPrefix(docs.ID(), "kivik$") {
+		id, _ := docs.ID()
+		if strings.HasPrefix(id, "kivik$") {
 			if err := docs.ScanDoc(&replDoc); err != nil {
 				return count, err
 			}
-			if _, err := replicator.Delete(context.Background(), docs.ID(), replDoc.Rev); err != nil {
+			if _, err := replicator.Delete(context.Background(), id, replDoc.Rev); err != nil {
 				return count, err
 			}
 			count++
@@ -242,9 +243,10 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 	}
 	var count int
 	for users.Next() {
-		if strings.HasPrefix(users.ID(), "org.couchdb.user:kivik$") {
+		id, _ := users.ID()
+		if strings.HasPrefix(id, "org.couchdb.user:kivik$") {
 			if verbose {
-				fmt.Printf("\t--- Deleting user %s\n", users.ID())
+				fmt.Printf("\t--- Deleting user %s\n", id)
 			}
 			var doc struct {
 				Rev string `json:"_rev"`
@@ -252,7 +254,7 @@ func cleanupUsers(ctx context.Context, client *kivik.Client, verbose bool) (int,
 			if err := users.ScanDoc(&doc); err != nil {
 				return count, err
 			}
-			if _, err := db.Delete(ctx, users.ID(), doc.Rev); err != nil {
+			if _, err := db.Delete(ctx, id, doc.Rev); err != nil {
 				return count, err
 			}
 			count++
@@ -291,13 +293,14 @@ func cleanupReplications(ctx context.Context, client *kivik.Client, verbose bool
 		if err := reps.ScanDoc(&doc); err != nil {
 			return count, err
 		}
-		if strings.HasPrefix(reps.ID(), "kivik$") ||
+		id, _ := reps.ID()
+		if strings.HasPrefix(id, "kivik$") ||
 			strings.HasPrefix(doc.Source, "kivik$") ||
 			strings.HasPrefix(doc.Target, "kivik$") {
 			if verbose {
-				fmt.Printf("\t--- Deleting replication %s\n", reps.ID())
+				fmt.Printf("\t--- Deleting replication %s\n", id)
 			}
-			if _, err := db.Delete(ctx, reps.ID(), doc.Rev); err != nil {
+			if _, err := db.Delete(ctx, id, doc.Rev); err != nil {
 				return count, err
 			}
 			count++
