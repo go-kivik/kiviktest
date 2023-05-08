@@ -120,7 +120,8 @@ func doTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string, exp
 	}
 	docIDs := make([]string, 0, len(expected))
 	for rows.Next() {
-		docIDs = append(docIDs, rows.ID())
+		id, _ := rows.ID()
+		docIDs = append(docIDs, id)
 	}
 	meta, err := rows.Metadata()
 	if err != nil {
@@ -172,10 +173,11 @@ func doTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, expOff
 		if value.Rev != doc.Rev {
 			ctx.Errorf("doc._rev = %s, but value.rev = %s", doc.Rev, value.Rev)
 		}
-		if doc.ID != rows.ID() {
-			ctx.Errorf("doc._id = %s, but rows.ID = %s", doc.ID, rows.ID())
+		id, _ := rows.ID()
+		if doc.ID != id {
+			ctx.Errorf("doc._id = %s, but rows.ID = %s", doc.ID, id)
 		}
-		docIDs = append(docIDs, rows.ID())
+		docIDs = append(docIDs, id)
 	}
 	meta, err := rows.Metadata()
 	if err != nil {

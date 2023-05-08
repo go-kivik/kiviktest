@@ -122,7 +122,8 @@ func doQueryTestWithoutDocs(ctx *kt.Context, client *kivik.Client, dbName string
 	docIDs := make([]string, 0, len(expected))
 	var scanTested bool
 	for rows.Next() {
-		docIDs = append(docIDs, rows.ID())
+		id, _ := rows.ID()
+		docIDs = append(docIDs, id)
 		if !scanTested {
 			scanTested = true
 			ctx.Run("ScanDoc", func(ctx *kt.Context) {
@@ -184,10 +185,11 @@ func doQueryTestWithDocs(ctx *kt.Context, client *kivik.Client, dbName string, e
 		if value != doc.Index {
 			ctx.Errorf("doc._rev = %d, but value = %d", doc.Index, value)
 		}
-		if doc.ID != rows.ID() {
-			ctx.Errorf("doc._id = %s, but rows.ID = %s", doc.ID, rows.ID())
+		id, _ := rows.ID()
+		if doc.ID != id {
+			ctx.Errorf("doc._id = %s, but rows.ID = %s", doc.ID, id)
 		}
-		docIDs = append(docIDs, rows.ID())
+		docIDs = append(docIDs, id)
 	}
 	meta, err := rows.Metadata()
 	if err != nil {
