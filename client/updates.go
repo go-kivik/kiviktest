@@ -40,8 +40,8 @@ const maxWait = 5 * time.Second
 
 func testUpdates(ctx *kt.Context, client *kivik.Client) {
 	ctx.Parallel()
-	updates, err := client.DBUpdates(context.TODO())
-	if !ctx.IsExpectedSuccess(err) {
+	updates := client.DBUpdates(context.TODO())
+	if !ctx.IsExpectedSuccess(updates.Err()) {
 		return
 	}
 	// It seems that DBUpdates doesn't always start responding immediately,
@@ -55,16 +55,15 @@ func testUpdates(ctx *kt.Context, client *kivik.Client) {
 			if updates.DBName() == dbname {
 				if updates.Type() == "created" {
 					break
-				} else {
-					eventErrors <- fmt.Errorf("Unexpected event type '%s'", updates.Type())
 				}
+				eventErrors <- fmt.Errorf("Unexpected event type '%s'", updates.Type())
 			}
 		}
 		eventErrors <- updates.Err()
 		close(eventErrors)
 	}()
 	defer ctx.DestroyDB(dbname)
-	if err = ctx.Admin.CreateDB(context.Background(), dbname, ctx.Options("db")); err != nil {
+	if err := ctx.Admin.CreateDB(context.Background(), dbname, ctx.Options("db")); err != nil {
 		ctx.Fatalf("Failed to create db: %s", err)
 	}
 	timer := time.NewTimer(maxWait)

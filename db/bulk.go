@@ -58,12 +58,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			for updates.Next() {
-				if err := updates.UpdateErr(); err != nil {
-					ctx.Errorf("Bulk create failed: %s", err)
+			for _, update := range updates {
+				if update.Error != nil {
+					ctx.Errorf("Bulk create failed: %s", update.Error)
 				}
 			}
-			if err := updates.Err(); err != nil {
+			if err != nil {
 				ctx.Errorf("Iteration error: %s", err)
 			}
 		})
@@ -82,12 +82,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			for updates.Next() {
-				if err := updates.UpdateErr(); err != nil {
-					ctx.Errorf("Bulk update failed: %s", err)
+			for _, update := range updates {
+				if update.Error != nil {
+					ctx.Errorf("Bulk delete failed: %s", update.Error)
 				}
 			}
-			if err := updates.Err(); err != nil {
+			if err != nil {
 				ctx.Errorf("Iteration error: %s", err)
 			}
 		})
@@ -108,12 +108,13 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			for updates.Next() {
-				if err := updates.UpdateErr(); err != nil {
-					ctx.Errorf("Bulk delete failed: %s", err)
+			for _, update := range updates {
+				if update.Error != nil {
+					ctx.Errorf("Bulk update failed: %s", update.Error)
+
 				}
 			}
-			if err := updates.Err(); err != nil {
+			if err != nil {
 				ctx.Errorf("Iteration error: %s", err)
 			}
 		})
@@ -161,9 +162,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			for updates.Next() {
+			if err != nil {
+				ctx.Errorf("Iteration error: %s", err)
+			}
+			for _, update := range updates {
 				var testName string
-				switch updates.ID() {
+				switch update.ID {
 				case id3:
 					testName = "Conflict"
 				case id1:
@@ -174,11 +178,8 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 					testName = "Create"
 				}
 				ctx.Run(testName, func(ctx *kt.Context) {
-					ctx.CheckError(updates.UpdateErr())
+					ctx.CheckError(update.Error)
 				})
-			}
-			if err := updates.Err(); err != nil {
-				ctx.Errorf("Iteration error: %s", err)
 			}
 		})
 		ctx.Run("NonJSON", func(ctx *kt.Context) {
@@ -200,13 +201,14 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
-			for updates.Next() {
-				if e := updates.UpdateErr(); e != nil {
-					ctx.Errorf("Bulk create failed: %s", e)
-				}
+			if err != nil {
+				ctx.Errorf("Iteration error: %s", err)
 			}
-			if e := updates.Err(); e != nil {
-				ctx.Errorf("Iteration error: %s", e)
+			for _, update := range updates {
+				if e := update.Error; e != nil {
+					ctx.Errorf("Bulk create failed: %s", e)
+
+				}
 			}
 			ctx.Run("Retrieve", func(ctx *kt.Context) {
 				var result map[string]interface{}
