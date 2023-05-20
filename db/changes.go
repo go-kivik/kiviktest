@@ -70,8 +70,8 @@ func testContinuousChanges(ctx *kt.Context, client *kivik.Client) {
 	if err := db.Err(); err != nil {
 		ctx.Fatalf("failed to connect to db: %s", err)
 	}
-	changes, err := db.Changes(context.Background(), ctx.Options("options"))
-	if !ctx.IsExpectedSuccess(err) {
+	changes := db.Changes(context.Background(), ctx.Options("options"))
+	if !ctx.IsExpectedSuccess(changes.Err()) {
 		return
 	}
 	expected := make([]string, 0, 3)
@@ -197,8 +197,8 @@ func testNormalChanges(ctx *kt.Context, client *kivik.Client) {
 	}
 	expected = append(expected, rev)
 
-	changes, err := db.Changes(context.Background(), ctx.Options("options"))
-	if !ctx.IsExpectedSuccess(err) {
+	changes := db.Changes(context.Background(), ctx.Options("options"))
+	if !ctx.IsExpectedSuccess(changes.Err()) {
 		return
 	}
 
