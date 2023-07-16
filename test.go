@@ -344,7 +344,7 @@ func RunTests(opts Options) {
 // Test is the main test entry point when running tests through the command line
 // tool.
 func Test(t *testing.T, driver, dsn string, testSuites []string, rw bool) {
-	clients, err := ConnectClients(t, driver, dsn)
+	clients, err := ConnectClients(t, driver, dsn, nil)
 	if err != nil {
 		t.Fatalf("Failed to connect to %s (%s driver): %s\n", dsn, driver, err)
 	}
@@ -421,7 +421,7 @@ func detectCompatibility(client *kivik.Client) ([]string, error) {
 }
 
 // ConnectClients connects clients.
-func ConnectClients(t *testing.T, driverName, dsn string) (*kt.Context, error) {
+func ConnectClients(t *testing.T, driverName, dsn string, opts kivik.Options) (*kt.Context, error) {
 	var noAuthDSN string
 	if parsed, err := url.Parse(dsn); err == nil {
 		if parsed.User == nil {
@@ -434,14 +434,14 @@ func ConnectClients(t *testing.T, driverName, dsn string) (*kt.Context, error) {
 		T: t,
 	}
 	t.Logf("Connecting to %s ...\n", dsn)
-	if client, err := kivik.New(driverName, dsn); err == nil {
+	if client, err := kivik.New(driverName, dsn, opts); err == nil {
 		clients.Admin = client
 	} else {
 		return nil, err
 	}
 
 	t.Logf("Connecting to %s ...\n", noAuthDSN)
-	if client, err := kivik.New(driverName, noAuthDSN); err == nil {
+	if client, err := kivik.New(driverName, noAuthDSN, opts); err == nil {
 		clients.NoAuth = client
 	} else {
 		return nil, err
@@ -455,7 +455,7 @@ func DoTest(t *testing.T, suite, envName string) {
 	if dsn == "" {
 		t.Skipf("%s: %s DSN not set; skipping tests", envName, suite)
 	}
-	clients, err := ConnectClients(t, driverMap[suite], dsn)
+	clients, err := ConnectClients(t, driverMap[suite], dsn, nil)
 	if err != nil {
 		t.Errorf("Failed to connect to %s: %s\n", suite, err)
 		return
