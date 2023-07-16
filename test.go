@@ -451,11 +451,13 @@ func ConnectClients(t *testing.T, driverName, dsn string, opts kivik.Options) (*
 
 // DoTest runs a suite of tests.
 func DoTest(t *testing.T, suite, envName string) {
+	opts, _ := suites[suite].Interface(t, "Options").(kivik.Options)
+
 	dsn := os.Getenv(envName)
 	if dsn == "" {
 		t.Skipf("%s: %s DSN not set; skipping tests", envName, suite)
 	}
-	clients, err := ConnectClients(t, driverMap[suite], dsn, nil)
+	clients, err := ConnectClients(t, driverMap[suite], dsn, opts)
 	if err != nil {
 		t.Errorf("Failed to connect to %s: %s\n", suite, err)
 		return
