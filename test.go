@@ -333,7 +333,7 @@ func RunTests(opts Options) {
 		{
 			Name: "MainTest",
 			F: func(t *testing.T) {
-				Test(opts.Driver, opts.DSN, opts.Suites, opts.RW, t)
+				Test(t, opts.Driver, opts.DSN, opts.Suites, opts.RW)
 			},
 		},
 	}
@@ -343,8 +343,8 @@ func RunTests(opts Options) {
 
 // Test is the main test entry point when running tests through the command line
 // tool.
-func Test(driver, dsn string, testSuites []string, rw bool, t *testing.T) {
-	clients, err := ConnectClients(driver, dsn, t)
+func Test(t *testing.T, driver, dsn string, testSuites []string, rw bool) {
+	clients, err := ConnectClients(t, driver, dsn)
 	if err != nil {
 		t.Fatalf("Failed to connect to %s (%s driver): %s\n", dsn, driver, err)
 	}
@@ -421,7 +421,7 @@ func detectCompatibility(client *kivik.Client) ([]string, error) {
 }
 
 // ConnectClients connects clients.
-func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
+func ConnectClients(t *testing.T, driverName, dsn string) (*kt.Context, error) {
 	var noAuthDSN string
 	if parsed, err := url.Parse(dsn); err == nil {
 		if parsed.User == nil {
@@ -450,12 +450,12 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 }
 
 // DoTest runs a suite of tests.
-func DoTest(suite, envName string, t *testing.T) {
+func DoTest(t *testing.T, suite, envName string) {
 	dsn := os.Getenv(envName)
 	if dsn == "" {
 		t.Skipf("%s: %s DSN not set; skipping tests", envName, suite)
 	}
-	clients, err := ConnectClients(driverMap[suite], dsn, t)
+	clients, err := ConnectClients(t, driverMap[suite], dsn)
 	if err != nil {
 		t.Errorf("Failed to connect to %s: %s\n", suite, err)
 		return
