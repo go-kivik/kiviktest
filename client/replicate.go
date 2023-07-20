@@ -148,7 +148,7 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 	replID := ctx.TestDBName()
 	rep, err := callReplicate(ctx, client, dbtarget, dbsource, replID, nil)
 	if !ctx.IsExpectedSuccess(err) {
-		return
+		return success
 	}
 	defer rep.Delete(context.Background()) // nolint: errcheck
 	timeout := time.Duration(ctx.MustInt("timeoutSeconds")) * time.Second
@@ -159,7 +159,7 @@ func doReplicationTest(ctx *kt.Context, client *kivik.Client, dbtarget, dbsource
 		select {
 		case <-cx.Done():
 			ctx.Fatalf("context cancelled waiting for replication: %s", cx.Err())
-			return
+			return success
 		default:
 		}
 		if updateErr = rep.Update(cx); updateErr != nil {
