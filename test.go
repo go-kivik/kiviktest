@@ -370,13 +370,12 @@ func Test(driver, dsn string, testSuites []string, rw bool, t *testing.T) {
 	}
 	t.Logf("Running the following test suites: %s\n", strings.Join(testSuites, ", "))
 	for _, suite := range testSuites {
-		RunTestsInternal(clients, suite, t)
+		RunTestsInternal(clients, suite)
 	}
 }
 
 // RunTestsInternal is for internal use only.
-func RunTestsInternal(ctx *kt.Context, suite string, t *testing.T) {
-	ctx.T = t
+func RunTestsInternal(ctx *kt.Context, suite string) {
 	conf, ok := suites[suite]
 	if !ok {
 		ctx.Skipf("No configuration found for suite '%s'", suite)
@@ -431,7 +430,9 @@ func ConnectClients(driverName, dsn string, t *testing.T) (*kt.Context, error) {
 		parsed.User = nil
 		noAuthDSN = parsed.String()
 	}
-	clients := &kt.Context{}
+	clients := &kt.Context{
+		T: t,
+	}
 	t.Logf("Connecting to %s ...\n", dsn)
 	if client, err := kivik.New(driverName, dsn); err == nil {
 		clients.Admin = client
@@ -460,5 +461,5 @@ func DoTest(suite, envName string, t *testing.T) {
 		return
 	}
 	clients.RW = true
-	RunTestsInternal(clients, suite, t)
+	RunTestsInternal(clients, suite)
 }
