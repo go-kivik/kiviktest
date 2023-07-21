@@ -29,7 +29,7 @@ var AllDocsIndex = kivik.Index{
 type SuiteConfig map[string]interface{}
 
 func name(t *testing.T) string {
-	name := tName(t)
+	name := t.Name()
 	return name[strings.Index(name, "/")+1:]
 }
 
