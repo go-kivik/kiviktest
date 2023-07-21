@@ -223,7 +223,7 @@ var invalidDBCharsRE = regexp.MustCompile(`[^a-z0-9_$\(\)+/-]`)
 // TestDBName generates a randomized string suitable for a database name for
 // testing.
 func TestDBName(t *testing.T) string {
-	id := strings.ToLower(tName(t))
+	id := strings.ToLower(t.Name())
 	id = invalidDBCharsRE.ReplaceAllString(id, "_")
 	id = id[strings.Index(id, "/")+1:]
 	id = strings.Replace(id, "/", "_", -1) + "$"
