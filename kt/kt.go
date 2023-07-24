@@ -275,11 +275,13 @@ func (c *Context) Parallel() {
 	c.T.Parallel()
 }
 
-// Retry will try an operation up to 3 times, in case of one of the following
-// failures. All other failures are returned.
+const maxRetries = 25
+
+// Retry will try an operation up to maxRetries times, in case of one of the
+// following failures. All other failures are returned.
 func Retry(fn func() error) error {
 	var err error
-	for i := 0; i < 25; i++ {
+	for i := 0; i < maxRetries; i++ {
 		err = fn()
 		if err != nil {
 			msg := strings.TrimSpace(err.Error())
