@@ -465,3 +465,25 @@ func DoTest(t *testing.T, suite, envName string) {
 	clients.RW = true
 	RunTestsInternal(clients, suite)
 }
+
+// DoTestWithAutoContainer runs a suite of tests by first starting CouchDB with
+// testcontainers, according to the provided version. If the
+// ENABLE_TESTCONTAINERS environment variable is not set, t.Skip() is called.
+func DoTestWithAutoContainer(t *testing.T, suite, version string) {
+	if os.Getenv("ENABLE_TESTCONTAINERS") == "" {
+		t.Skip("ENABLE_TESTCONTAINERS not set; skipping tests")
+	}
+	opts, _ := suites[suite].Interface(t, "Options").(kivik.Options)
+
+	dsn, err := kt.StartContainer(version)
+	if err != nil {
+		t.Fatal(err)
+	}
+	clients, err := ConnectClients(t, driverMap[suite], dsn, opts)
+	if err != nil {
+		t.Errorf("Failed to connect to %s: %s\n", suite, err)
+		return
+	}
+	clients.RW = true
+	RunTestsInternal(clients, suite)
+}
