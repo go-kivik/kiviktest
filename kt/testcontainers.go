@@ -15,7 +15,9 @@ package kt
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/docker/docker/api/types/container"
@@ -24,9 +26,11 @@ import (
 )
 
 const (
-	servicePort   = "5984"
-	adminUsername = "admin"
-	adminPassword = "abc123"
+	servicePort        = "5984"
+	adminUsername      = "admin"
+	adminPassword      = "abc123"
+	defaultVersion     = "3.3"
+	replicatorInterval = `"1000"`
 )
 
 type version struct {
@@ -43,8 +47,12 @@ var supportedVersions = map[string]version{
 }
 
 // StartContainer starts a container running the requested version of CouchDB,
-// and returns the DSN to connect to the instance.
+// and returns the DSN to connect to the instance. If version is empty, the
+// latest version is used.
 func StartContainer(version string) (string, error) {
+	if version == "" {
+		version = defaultVersion
+	}
 	ver, ok := supportedVersions[version]
 	if !ok {
 		return "", fmt.Errorf("unknown CouchDB version %s", version)
@@ -87,5 +95,57 @@ func StartContainer(version string) (string, error) {
 	}
 	addr := fmt.Sprintf("http://%s:%s@%s:%s/", adminUsername, adminPassword, host, port.Port())
 
+	c := &http.Client{}
+	for _, dbName := range []string{"_users", "_replicator", "_global_changes"} {
+		if err := createDB(ctx, c, addr, dbName); err != nil {
+			return "", err
+		}
+	}
+	if err := setReplicatorInterval(ctx, c, addr); err != nil {
+		return "", err
+	}
+
 	return addr, nil
+}
+
+func createDB(ctx context.Context, c *http.Client, addr, dbName string) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, addr+dbName, nil)
+	if err != nil {
+		return err
+	}
+	res, err := c.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	switch {
+	case res.StatusCode == http.StatusPreconditionFailed:
+		return nil
+	case res.StatusCode >= http.StatusOK && res.StatusCode < http.StatusMultipleChoices:
+		return nil
+	}
+	return fmt.Errorf("unexpected response code %d", res.StatusCode)
+}
+
+func setReplicatorInterval(ctx context.Context, c *http.Client, addr string) error {
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodPut,
+		addr+"_node/nonode@nohost/_config/replicator/interval",
+		strings.NewReader(replicatorInterval),
+	)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := c.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode >= http.StatusOK && res.StatusCode < http.StatusMultipleChoices {
+		return nil
+	}
+	return fmt.Errorf("unexpected response code %d", res.StatusCode)
 }
