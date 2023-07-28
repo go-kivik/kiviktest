@@ -20,10 +20,10 @@ import (
 )
 
 func init() {
-	kt.Register("Delete", delete)
+	kt.Register("Delete", _delete)
 }
 
-func delete(ctx *kt.Context) {
+func _delete(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		ctx.RunAdmin(func(ctx *kt.Context) {
 			testDelete(ctx, ctx.Admin)
