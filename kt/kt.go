@@ -289,6 +289,7 @@ func Retry(fn func() error) error {
 				strings.HasSuffix(msg, "write: broken pipe") ||
 				strings.HasSuffix(msg, ": EOF") ||
 				strings.HasSuffix(msg, ": http: server closed idle connection") ||
+				strings.HasSuffix(msg, "write: connection reset by peer") ||
 				strings.HasSuffix(msg, "read: connection reset by peer") {
 				fmt.Printf("Retrying after error: %s\n", err)
 				time.Sleep(500 * time.Millisecond)
