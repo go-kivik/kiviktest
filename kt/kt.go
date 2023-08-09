@@ -294,6 +294,7 @@ func Retry(fn func() error) error {
 				time.Sleep(500 * time.Millisecond)
 				continue
 			}
+			err = fmt.Errorf("retry#%d failed: %w", i, err)
 		}
 		break
 	}
