@@ -24,10 +24,10 @@ variables:
 
 lint:
     stage: test
-    image: golangci/golangci-lint:v1.43
+    image: golangci/golangci-lint:v1.54.0
     services: []
     before_script:
-        - ''
+        - ""
     script:
         - go mod download
         - golangci-lint run ./...

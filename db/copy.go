@@ -20,10 +20,10 @@ import (
 )
 
 func init() {
-	kt.Register("Copy", copy)
+	kt.Register("Copy", _copy)
 }
 
-func copy(ctx *kt.Context) {
+func _copy(ctx *kt.Context) {
 	ctx.RunRW(func(ctx *kt.Context) {
 		dbname := ctx.TestDB()
 		defer ctx.DestroyDB(dbname)
@@ -90,12 +90,12 @@ func copyTest(ctx *kt.Context, client *kivik.Client, dbname string, source map[s
 			return
 		}
 		ctx.Run("RevCopy", func(ctx *kt.Context) {
-			copy := map[string]string{
+			cp := map[string]string{
 				"_id":  targetID,
 				"name": "Bob",
 				"_rev": rev,
 			}
-			if _, e := db.Put(context.Background(), targetID, copy); e != nil {
+			if _, e := db.Put(context.Background(), targetID, cp); e != nil {
 				ctx.Fatalf("Failed to update copy: %s", e)
 			}
 			targetID2 := ctx.TestDBName()
