@@ -25,6 +25,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	kivik "github.com/go-kivik/kivik/v4"
 )
 
@@ -275,17 +276,17 @@ func (c *Context) Parallel() {
 	c.T.Parallel()
 }
 
-const maxRetries = 1
+const maxRetries = 5
 
 // Retry will try an operation up to maxRetries times, in case of one of the
 // following failures. All other failures are returned.
 func Retry(fn func() error) error {
-	var err error
-	for i := 0; i < maxRetries; i++ {
-		err = fn()
+	bo := backoff.WithMaxRetries(backoff.NewExponentialBackOff(), maxRetries)
+	var i int
+	return backoff.Retry(func() error {
+		err := fn()
 		if err != nil {
 			msg := strings.TrimSpace(err.Error())
-			err = fmt.Errorf("retry#%d failed: %w", i, err)
 			if strings.HasSuffix(msg, "io: read/write on closed pipe") ||
 				strings.HasSuffix(msg, "write: broken pipe") ||
 				strings.HasSuffix(msg, ": EOF") ||
@@ -294,12 +295,13 @@ func Retry(fn func() error) error {
 				strings.HasSuffix(msg, "read: connection reset by peer") {
 				fmt.Printf("Retrying after error: %s\n", err)
 				time.Sleep(500 * time.Millisecond)
-				continue
+				i++
+				return fmt.Errorf("attempt #%d failed: %w", i, err)
 			}
+			return backoff.Permanent(err)
 		}
-		break
-	}
-	return err
+		return nil
+	}, bo)
 }
 
 // Body turns a string into a read closer, useful as a request or attachment
