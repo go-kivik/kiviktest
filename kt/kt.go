@@ -15,13 +15,16 @@ package kt
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"math/rand"
+	"net/url"
 	"regexp"
 	"strings"
 	"sync"
+	"syscall"
 	"testing"
 	"time"
 
@@ -276,7 +279,7 @@ func (c *Context) Parallel() {
 	c.T.Parallel()
 }
 
-const maxRetries = 5
+const maxRetries = 1
 
 // Retry will try an operation up to maxRetries times, in case of one of the
 // following failures. All other failures are returned.
@@ -302,13 +305,29 @@ func shouldRetry(err error) bool {
 	if err == nil {
 		return false
 	}
-	msg := strings.TrimSpace(err.Error())
-	return strings.HasSuffix(msg, "io: read/write on closed pipe") ||
-		strings.HasSuffix(msg, "write: broken pipe") ||
-		strings.HasSuffix(msg, ": EOF") ||
-		strings.HasSuffix(msg, ": http: server closed idle connection") ||
-		strings.HasSuffix(msg, "write: connection reset by peer") ||
-		strings.HasSuffix(msg, "read: connection reset by peer")
+	var errno syscall.Errno
+	if errors.As(err, &errno) {
+		switch errno {
+		case syscall.ECONNRESET, syscall.EPIPE:
+			return true
+		}
+	}
+	fmt.Printf("expanding error: %s\n", err)
+	for e := err; e != nil; e = errors.Unwrap(e) {
+		fmt.Printf("\terr type: [%T] %s\n", e, e)
+	}
+	urlErr := new(url.Error)
+	if errors.As(err, &urlErr) {
+		// Seems string comparison is necessary in some cases.
+		msg := strings.TrimSpace(urlErr.Error())
+		return strings.HasSuffix(msg, ": connection reset by peer") || // Observed in Go 1.18
+			strings.HasSuffix(msg, ": broken pipe") // Observed in Go 1.19 & 1.17
+	}
+	return false
+	// msg := strings.TrimSpace(err.Error())
+	// return strings.HasSuffix(msg, "io: read/write on closed pipe") ||
+	// 	strings.HasSuffix(msg, ": EOF") ||
+	// 	strings.HasSuffix(msg, ": http: server closed idle connection")
 }
 
 // Body turns a string into a read closer, useful as a request or attachment
