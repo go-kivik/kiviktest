@@ -286,13 +286,7 @@ func Retry(fn func() error) error {
 	return backoff.Retry(func() error {
 		err := fn()
 		if err != nil {
-			msg := strings.TrimSpace(err.Error())
-			if strings.HasSuffix(msg, "io: read/write on closed pipe") ||
-				strings.HasSuffix(msg, "write: broken pipe") ||
-				strings.HasSuffix(msg, ": EOF") ||
-				strings.HasSuffix(msg, ": http: server closed idle connection") ||
-				strings.HasSuffix(msg, "write: connection reset by peer") ||
-				strings.HasSuffix(msg, "read: connection reset by peer") {
+			if shouldRetry(err) {
 				fmt.Printf("Retrying after error: %s\n", err)
 				time.Sleep(500 * time.Millisecond)
 				i++
@@ -302,6 +296,19 @@ func Retry(fn func() error) error {
 		}
 		return nil
 	}, bo)
+}
+
+func shouldRetry(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.TrimSpace(err.Error())
+	return strings.HasSuffix(msg, "io: read/write on closed pipe") ||
+		strings.HasSuffix(msg, "write: broken pipe") ||
+		strings.HasSuffix(msg, ": EOF") ||
+		strings.HasSuffix(msg, ": http: server closed idle connection") ||
+		strings.HasSuffix(msg, "write: connection reset by peer") ||
+		strings.HasSuffix(msg, "read: connection reset by peer")
 }
 
 // Body turns a string into a read closer, useful as a request or attachment
