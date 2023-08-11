@@ -285,6 +285,7 @@ func Retry(fn func() error) error {
 		err = fn()
 		if err != nil {
 			msg := strings.TrimSpace(err.Error())
+			err = fmt.Errorf("retry#%d failed: %w", i, err)
 			if strings.HasSuffix(msg, "io: read/write on closed pipe") ||
 				strings.HasSuffix(msg, "write: broken pipe") ||
 				strings.HasSuffix(msg, ": EOF") ||
@@ -295,7 +296,6 @@ func Retry(fn func() error) error {
 				time.Sleep(500 * time.Millisecond)
 				continue
 			}
-			err = fmt.Errorf("retry#%d failed: %w", i, err)
 		}
 		break
 	}
