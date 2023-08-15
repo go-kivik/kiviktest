@@ -43,7 +43,13 @@ func replicate(ctx *kt.Context) {
 
 func callReplicate(ctx *kt.Context, client *kivik.Client, target, source, repID string, opts kivik.Options) (*kivik.Replication, error) {
 	opts = replicationOptions(ctx, client, target, source, repID, opts)
-	return client.Replicate(context.Background(), target, source, opts)
+	var rep *kivik.Replication
+	err := kt.Retry(func() error {
+		var err error
+		rep, err = client.Replicate(context.Background(), target, source, opts)
+		return err
+	})
+	return rep, err
 }
 
 func testReplication(ctx *kt.Context, client *kivik.Client) {
