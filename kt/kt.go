@@ -305,6 +305,15 @@ func shouldRetry(err error) bool {
 	if err == nil {
 		return false
 	}
+	var statusErr interface {
+		error
+		HTTPStatus() int
+	}
+	if errors.As(err, &statusErr) {
+		if status := statusErr.HTTPStatus(); status < 500 {
+			return false
+		}
+	}
 	var errno syscall.Errno
 	if errors.As(err, &errno) {
 		switch errno {
