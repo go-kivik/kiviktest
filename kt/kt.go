@@ -18,7 +18,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"net/url"
 	"regexp"
@@ -338,5 +337,5 @@ func shouldRetry(err error) bool {
 // Body turns a string into a read closer, useful as a request or attachment
 // body.
 func Body(str string, args ...interface{}) io.ReadCloser {
-	return ioutil.NopCloser(strings.NewReader(fmt.Sprintf(str, args...)))
+	return io.NopCloser(strings.NewReader(fmt.Sprintf(str, args...)))
 }
