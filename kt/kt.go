@@ -18,7 +18,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"net/url"
 	"regexp"
@@ -305,16 +304,21 @@ func shouldRetry(err error) bool {
 	if err == nil {
 		return false
 	}
+	var statusErr interface {
+		error
+		HTTPStatus() int
+	}
+	if errors.As(err, &statusErr) {
+		if status := statusErr.HTTPStatus(); status < 500 {
+			return false
+		}
+	}
 	var errno syscall.Errno
 	if errors.As(err, &errno) {
 		switch errno {
 		case syscall.ECONNRESET, syscall.EPIPE:
 			return true
 		}
-	}
-	fmt.Printf("expanding error: %s\n", err)
-	for e := err; e != nil; e = errors.Unwrap(e) {
-		fmt.Printf("\terr type: [%T] %s\n", e, e)
 	}
 	urlErr := new(url.Error)
 	if errors.As(err, &urlErr) {
@@ -333,5 +337,5 @@ func shouldRetry(err error) bool {
 // Body turns a string into a read closer, useful as a request or attachment
 // body.
 func Body(str string, args ...interface{}) io.ReadCloser {
-	return ioutil.NopCloser(strings.NewReader(fmt.Sprintf(str, args...)))
+	return io.NopCloser(strings.NewReader(fmt.Sprintf(str, args...)))
 }
