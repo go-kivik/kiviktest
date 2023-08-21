@@ -278,7 +278,7 @@ func (c *Context) Parallel() {
 	c.T.Parallel()
 }
 
-const maxRetries = 1
+const maxRetries = 5
 
 // Retry will try an operation up to maxRetries times, in case of one of the
 // following failures. All other failures are returned.
