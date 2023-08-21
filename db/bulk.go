@@ -54,7 +54,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			doc := map[string]string{
 				"name": "Robert",
 			}
-			updates, err := db.BulkDocs(context.Background(), []interface{}{doc})
+			var updates []kivik.BulkResult
+			err := kt.Retry(func() error {
+				var err error
+				updates, err = db.BulkDocs(context.Background(), []interface{}{doc})
+				return err
+			})
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
@@ -78,7 +83,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 				ctx.Fatalf("Failed to create doc: %s", err)
 			}
 			doc["_rev"] = rev
-			updates, err := db.BulkDocs(context.Background(), []interface{}{doc})
+			var updates []kivik.BulkResult
+			err = kt.Retry(func() error {
+				var err error
+				updates, err = db.BulkDocs(context.Background(), []interface{}{doc})
+				return err
+			})
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
@@ -104,14 +114,18 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			}
 			doc["_rev"] = rev
 			doc["_deleted"] = true
-			updates, err := db.BulkDocs(context.Background(), []interface{}{doc})
+			var updates []kivik.BulkResult
+			err = kt.Retry(func() error {
+				var err error
+				updates, err = db.BulkDocs(context.Background(), []interface{}{doc})
+				return err
+			})
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
 			for _, update := range updates {
 				if update.Error != nil {
 					ctx.Errorf("Bulk update failed: %s", update.Error)
-
 				}
 			}
 			if err != nil {
@@ -158,7 +172,13 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 				ctx.Fatalf("Failed to create doc2: %s", err)
 			}
 
-			updates, err := db.BulkDocs(context.Background(), []interface{}{doc0, doc1, doc2, doc3})
+			var updates []kivik.BulkResult
+
+			err = kt.Retry(func() error {
+				var err error
+				updates, err = db.BulkDocs(context.Background(), []interface{}{doc0, doc1, doc2, doc3})
+				return err
+			})
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
@@ -197,7 +217,12 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 					Age  int    `json:"the_age"`
 				}{ID: id2, Name: "Alice", Age: 32},
 			}
-			updates, err := db.BulkDocs(context.Background(), docs)
+			var updates []kivik.BulkResult
+			err := kt.Retry(func() error {
+				var err error
+				updates, err = db.BulkDocs(context.Background(), docs)
+				return err
+			})
 			if !ctx.IsExpectedSuccess(err) {
 				return
 			}
@@ -207,7 +232,6 @@ func testBulkDocs(ctx *kt.Context, client *kivik.Client) { // nolint: gocyclo
 			for _, update := range updates {
 				if e := update.Error; e != nil {
 					ctx.Errorf("Bulk create failed: %s", e)
-
 				}
 			}
 			ctx.Run("Retrieve", func(ctx *kt.Context) {
