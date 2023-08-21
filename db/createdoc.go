@@ -47,13 +47,21 @@ func testCreate(ctx *kt.Context, client *kivik.Client, dbname string) {
 	}
 	ctx.Run("WithoutID", func(ctx *kt.Context) {
 		ctx.Parallel()
-		_, _, err := db.CreateDoc(context.Background(), map[string]string{"foo": "bar"})
+		err := kt.Retry(func() error {
+			_, _, err := db.CreateDoc(context.Background(), map[string]string{"foo": "bar"})
+			return err
+		})
 		ctx.CheckError(err)
 	})
 	ctx.Run("WithID", func(ctx *kt.Context) {
 		ctx.Parallel()
 		id := ctx.TestDBName()
-		docID, _, err := db.CreateDoc(context.Background(), map[string]string{"foo": "bar", "_id": id})
+		var docID string
+		err := kt.Retry(func() error {
+			var err error
+			docID, _, err = db.CreateDoc(context.Background(), map[string]string{"foo": "bar", "_id": id})
+			return err
+		})
 		if !ctx.IsExpectedSuccess(err) {
 			return
 		}
