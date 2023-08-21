@@ -321,10 +321,6 @@ func shouldRetry(err error) bool {
 			return true
 		}
 	}
-	fmt.Printf("expanding error: %s\n", err)
-	for e := err; e != nil; e = errors.Unwrap(e) {
-		fmt.Printf("\terr type: [%T] %s\n", e, e)
-	}
 	urlErr := new(url.Error)
 	if errors.As(err, &urlErr) {
 		// Seems string comparison is necessary in some cases.
