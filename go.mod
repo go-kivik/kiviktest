@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/cenkalti/backoff/v4 v4.1.3
-	github.com/go-kivik/kivik/v4 v4.0.0-20230519204432-875898671a01
+	github.com/go-kivik/kivik/v4 v4.0.0-20230825200355-0f8647cd510a
 	github.com/gopherjs/gopherjs v0.0.0-20180825215210-0210a2f0f73c
 	github.com/pkg/errors v0.9.1
 	gitlab.com/flimzy/testy v0.12.4
