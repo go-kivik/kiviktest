@@ -1,3 +1,4 @@
+// Deprecated: Use [github.com/go-kivik/kivik/v4/kiviktest] instead.
 module github.com/go-kivik/kiviktest/v4
 
 go 1.17
