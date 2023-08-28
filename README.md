@@ -1,3 +1,5 @@
+This code has moved to [the main kivik repo](https://github.com/go-kivik/kivik/tree/master/kiviktest).
+
 # kiviktest
 
 This package provides integration tests for the
